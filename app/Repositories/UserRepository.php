@@ -62,8 +62,8 @@ class UserRepository implements UserRepositoryInterface
     /**
      * Retrieve a User model instance by cellphone number
      */
-    public function getUserByCellphoneNumber(int|string $cellphoneNumber): User
+    public function getUserByCellphoneNumber(string $cellphoneNumber): User
     {
-        return User::where('cellphone_number', "{$cellphoneNumber}")->first();
+        return User::where('cellphone_number', $cellphoneNumber)->first();
     }
 }

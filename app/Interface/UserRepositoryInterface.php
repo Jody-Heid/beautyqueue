@@ -25,7 +25,7 @@ interface UserRepositoryInterface
     /**
      * Retrieve a User model instance by cellphone number
      */
-    public function getUserByCellphoneNumber(string|int $cellphoneNumber): User;
+    public function getUserByCellphoneNumber(string $cellphoneNumber): User;
 
     /**
      * Create a new User
