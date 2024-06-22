@@ -50,4 +50,20 @@ class UserRepository implements UserRepositoryInterface
     {
         $user->delete();
     }
+
+    /**
+     * Retrieve a User model instance by email
+     */
+    public function getUserByEmail(string $email): User
+    {
+        return User::where('email', $email)->first();
+    }
+
+    /**
+     * Retrieve a User model instance by cellphone number
+     */
+    public function getUserByCellphoneNumber(int|string $cellphoneNumber): User
+    {
+        return User::where('cellphone_number', "{$cellphoneNumber}")->first();
+    }
 }

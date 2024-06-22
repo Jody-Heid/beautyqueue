@@ -18,6 +18,16 @@ interface UserRepositoryInterface
     public function getUserById(int|string $id): User;
 
     /**
+     * Retrieve a User model instance by email
+     */
+    public function getUserByEmail(string $email): User;
+
+    /**
+     * Retrieve a User model instance by cellphone number
+     */
+    public function getUserByCellphoneNumber(string|int $cellphoneNumber): User;
+
+    /**
      * Create a new User
      */
     public function createUser(array $userDetails): User;

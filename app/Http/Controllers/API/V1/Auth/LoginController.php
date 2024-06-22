@@ -4,31 +4,32 @@ namespace App\Http\Controllers\API\V1\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
-use App\Models\User;
-use App\Traits\ApiResponseHelpers;
+use App\Repositories\UserRepository;
+use Flugg\Responder\Contracts\Responder;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
-    use ApiResponseHelpers;
+    public function __construct(private readonly UserRepository $userRepository,
+        private readonly Responder $responder
+    ) {
+    }
 
-    public function authentication(LoginRequest $request)
+    public function authentication(LoginRequest $request): JsonResponse
     {
-        $user = User::where('email', $request->validated('email'))->first();
-        $userPassword = $user->password;
-        if ($user && Hash::check($request->validated('password'), $userPassword)) {
+        $user = $this->userRepository->getUserByEmail($request->validated('email'));
 
-            $token = $user->createToken($userPassword)->plainTextToken;
-
-            return $this
-                ->withMessage('Login Successful')
-                ->respondWithSuccess([
-                    'authorization' => [
-                        'token' => $token,
-                        'type' => 'bearer',
-                    ]]);
+        if (Hash::check($request->validated('password'), $userPassword = $user->password)) {
+            return $this->responder
+                ->success([
+                    'token' => $user->createToken($userPassword)->plainTextToken,
+                    'type' => 'bearer',
+                ])->respond();
         }
 
-        return $this->respondUnAuthenticated();
+        return responder()
+            ->error('unauthenticated')
+            ->respond(403);
     }
 }
