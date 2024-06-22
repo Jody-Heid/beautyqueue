@@ -21,6 +21,7 @@ class LoginController extends Controller
         $user = $this->userRepository->getUserByEmail($request->validated('email'));
 
         if (Hash::check($request->validated('password'), $userPassword = $user->password)) {
+            $user->tokens()->delete();
             return $this->responder
                 ->success([
                     'token' => $user->createToken($userPassword)->plainTextToken,
