@@ -15,10 +15,10 @@ class DatabaseSeeder extends Seeder
             PermissionSeeder::class,
             RoleSeeder::class,
             UserSeeder::class,
-            CustomerSeeder::class,
-            StaffSeeder::class,
-            OfferedServiceSeeder::class,
-            AppointmentSeeder::class,
+            //            CustomerSeeder::class,
+            //            StaffSeeder::class,
+            //            OfferedServiceSeeder::class,
+            //            AppointmentSeeder::class,
         ]);
     }
 }
