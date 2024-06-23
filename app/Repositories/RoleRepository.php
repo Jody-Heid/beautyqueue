@@ -82,8 +82,6 @@ class RoleRepository implements RoleRepositoryInterface
      */
     public function getRolePermissions(Role $role): Permission
     {
-        if (! empty($role->permissions)) {
-            return $role->permissions;
-        }
+        return $role->permissions;
     }
 }

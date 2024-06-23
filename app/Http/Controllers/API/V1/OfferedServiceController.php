@@ -14,7 +14,7 @@ class OfferedServiceController extends Controller
 {
     public function __construct(
         private readonly OfferedServiceService $offeredServiceService,
-        private readonly Responder             $responder
+        private readonly Responder $responder
     ) {
         $this->authorizeResource(OfferedService::class, 'service');
     }

@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Interface\RoleRepositoryInterface;
 use App\Interface\UserRepositoryInterface;
 use App\Models\User;
-use Flugg\Responder\Responder;
 use Illuminate\Database\Eloquent\Collection;
 
 class UserService
@@ -13,7 +12,6 @@ class UserService
     public function __construct(
         private readonly UserRepositoryInterface $userRepository,
         private readonly RoleRepositoryInterface $roleRepository,
-        private readonly Responder $responder
     ) {
     }
 
