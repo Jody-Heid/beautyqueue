@@ -32,7 +32,7 @@ class OfferedServiceService
     /**
      * Get an offered service by ID.
      */
-    public function getOfferedService(int|string $id): OfferedService
+    public function getOfferedServiceById(int|string $id): OfferedService
     {
         return $this->offeredServiceRepository->getOfferedServiceById($id);
     }

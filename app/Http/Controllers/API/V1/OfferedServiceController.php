@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API\V1;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\ServiceStoreRequest;
 use App\Http\Requests\ServiceUpdateRequest;
 use App\Models\OfferedService;
@@ -14,7 +15,7 @@ class OfferedServiceController extends Controller
 {
     public function __construct(
         private readonly OfferedServiceService $offeredServiceService,
-        private readonly Responder $responder
+        private readonly Responder $responder,
     ) {
         $this->authorizeResource(OfferedService::class, 'service');
     }
