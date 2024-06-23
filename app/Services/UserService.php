@@ -5,9 +5,8 @@ namespace App\Services;
 use App\Interface\RoleRepositoryInterface;
 use App\Interface\UserRepositoryInterface;
 use App\Models\User;
-use App\Transformers\UserTransformer;
 use Flugg\Responder\Responder;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Database\Eloquent\Collection;
 
 class UserService
 {
@@ -21,55 +20,49 @@ class UserService
     /**
      * List all users.
      */
-    public function listUsers(): JsonResponse
+    public function listUsers(): Collection
     {
-        $users = $this->userRepository->getAllUsers();
-
-        return $users->isEmpty()
-            ? $this->responder->success($users)->meta(['message' => 'No Users Found'])->respond()
-            : $this->responder->success($users, UserTransformer::class)->respond();
+        return $this->userRepository->getAllUsers();
     }
 
     /**
      * Create a new user and assign a role.
-     *
      */
-    public function createUser(array $userData): JsonResponse
+    public function createUser(array $userData): User
     {
         $user = $this->userRepository->createUser($userData);
-        $role = $this->roleRepository->getById($userData['role_id']);
+        $role = $this->roleRepository->getRoleById($userData['role_id']);
         $user->assignRole($role->name);
 
-        return $this->responder->success($user, UserTransformer::class)->meta(['message' => 'User Created'])->respond();
+        return $user;
     }
 
     /**
      * Get a specific user by ID.
      */
-    public function getUser(User $user): JsonResponse
+    public function getUserById(string|int $id): User
     {
-        return $this->responder->success($user, UserTransformer::class)->respond();
+        return $this->userRepository->getUserById($id);
     }
 
     /**
      * Update an existing user and sync their roles.
      */
-    public function updateUser(array $userData, User $user): JsonResponse
+    public function updateUser(array $userData, User $user): User
     {
         $this->userRepository->updateUser($userData, $user);
-        $role = $this->roleRepository->getById($userData['role_id']);
+        $role = $this->roleRepository->getRoleById($userData['role_id']);
         $user->syncRoles($role->name);
 
-        return $this->responder->success($user, UserTransformer::class)->meta(['message' => 'User Updated'])->respond();
+        return $user;
     }
 
     /**
      * Delete a specific user.
      */
-    public function destroyUser(User $user): JsonResponse
+    public function destroyUser(User $user): void
     {
         $this->userRepository->deleteUser($user);
 
-        return $this->responder->success()->meta(['message' => 'User Deleted'])->respond();
     }
 }

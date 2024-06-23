@@ -1,56 +1,58 @@
 <?php
 
-namespace App\Http\Controllers\API\V1;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests\ServiceStoreRequest;
 use App\Http\Requests\ServiceUpdateRequest;
 use App\Models\OfferedService;
-use App\Repositories\OfferedServiceRepository;
+use App\Services\OfferedServiceService;
 use App\Transformers\OfferedServiceTransformer;
-use Flugg\Responder\Http\Responses\SuccessResponseBuilder;
 use Flugg\Responder\Responder;
+use Illuminate\Http\JsonResponse;
 
 class OfferedServiceController extends Controller
 {
-    public function __construct(private readonly OfferedServiceRepository $offeredServiceRepository,
-        private readonly Responder $responder
+    public function __construct(
+        private readonly OfferedServiceService $offeredServiceService,
+        private readonly Responder             $responder
     ) {
         $this->authorizeResource(OfferedService::class, 'service');
     }
 
-    public function index(): SuccessResponseBuilder
+    public function index(): JsonResponse
     {
-        $services = $this->offeredServiceRepository->getAllOfferedServices();
+        $services = $this->offeredServiceService->getAllOfferedServices();
 
         return $services->isEmpty()
-            ? $this->responder->success()->meta(['message' => 'No Services Found'])
-            : $this->responder->success($services, OfferedServiceTransformer::class);
+            ? $this->responder->success()->meta(['message' => 'No Services Found'])->respond()
+            : $this->responder->success($services, OfferedServiceTransformer::class)->respond();
     }
 
-    public function store(ServiceStoreRequest $request): SuccessResponseBuilder
+    public function store(ServiceStoreRequest $request): JsonResponse
     {
-        $service = $this->offeredServiceRepository->createOfferedService($request->validated());
+        $service = $this->offeredServiceService->createOfferedService($request->validated());
 
-        return $this->responder->success($service, OfferedServiceTransformer::class)->meta(['message' => 'Service Created']);
+        return $this->responder->success($service, OfferedServiceTransformer::class)->meta(['message' => 'Service Created'])
+            ->respond();
     }
 
-    public function show(OfferedService $service): SuccessResponseBuilder
+    public function show(OfferedService $service): JsonResponse
     {
-        return $this->responder->success($service, OfferedServiceTransformer::class);
+        return $this->responder->success($service, OfferedServiceTransformer::class)->respond();
     }
 
-    public function update(ServiceUpdateRequest $request, OfferedService $service): SuccessResponseBuilder
+    public function update(ServiceUpdateRequest $request, OfferedService $service): JsonResponse
     {
-        $service = $this->offeredServiceRepository->updateOfferedService($request->validated(), $service);
+        $service = $this->offeredServiceService->updateOfferedService($request->validated(), $service);
 
-        return $this->responder->success($service, OfferedServiceTransformer::class)->meta(['message' => 'Service Updated']);
+        return $this->responder->success($service, OfferedServiceTransformer::class)->meta(['message' => 'Service Updated'])
+            ->respond();
     }
 
-    public function destroy(OfferedService $service): SuccessResponseBuilder
+    public function destroy(OfferedService $service): JsonResponse
     {
-        $this->offeredServiceRepository->deleteOfferedService($service);
+        $this->offeredServiceService->deleteOfferedService($service);
 
-        return $this->responder->success()->meta(['message' => 'Service Deleted']);
+        return $this->responder->success()->meta(['message' => 'Service Deleted'])->respond();
     }
 }

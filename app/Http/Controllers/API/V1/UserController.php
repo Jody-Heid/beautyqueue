@@ -7,6 +7,7 @@ use App\Http\Requests\UserCreateRequest;
 use App\Http\Requests\UserUpdateRequest;
 use App\Models\User;
 use App\Services\UserService;
+use App\Transformers\UserTransformer;
 use Flugg\Responder\Responder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -23,17 +24,22 @@ class UserController extends Controller
 
     public function index(): JsonResponse
     {
-        return $this->userService->listUsers();
+        $users = $this->userService->listUsers();
+
+        return $users->isEmpty()
+            ? $this->responder->success($users)->meta(['message' => 'No Users Found'])->respond()
+            : $this->responder->success($users, UserTransformer::class)->respond();
     }
 
     public function store(UserCreateRequest $request): JsonResponse
     {
         DB::beginTransaction();
         try {
-            $response = $this->userService->createUser($request->validated());
+            $user = $this->userService->createUser($request->validated());
+
             DB::commit();
 
-            return $response;
+            return $this->responder->success($user, UserTransformer::class)->meta(['message' => 'User Created'])->respond();
         } catch (Throwable $e) {
             DB::rollBack();
 
@@ -43,17 +49,17 @@ class UserController extends Controller
 
     public function show(User $user): JsonResponse
     {
-        return $this->userService->getUser($user);
+        return $this->responder->success($user, UserTransformer::class)->respond();
     }
 
     public function update(UserUpdateRequest $request, User $user): JsonResponse
     {
         DB::beginTransaction();
         try {
-            $response = $this->userService->updateUser($request->validated(), $user);
+            $user = $this->userService->updateUser($request->validated(), $user);
             DB::commit();
 
-            return $response;
+            return $this->responder->success($user, UserTransformer::class)->meta(['message' => 'User Updated'])->respond();
         } catch (Throwable $e) {
             DB::rollBack();
 
@@ -63,6 +69,8 @@ class UserController extends Controller
 
     public function destroy(User $user): JsonResponse
     {
-        return $this->userService->destroyUser($user);
+        $this->userService->destroyUser($user);
+
+        return $this->responder->success()->meta(['message' => 'User Deleted'])->respond();
     }
 }

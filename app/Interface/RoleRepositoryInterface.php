@@ -13,7 +13,7 @@ interface RoleRepositoryInterface
      * @param  string|int  $id  The ID of the role.
      * @return Role The role instance.
      */
-    public function getById(string|int $id, ?string $guardName = null): Role;
+    public function getRoleById(string|int $id, ?string $guardName = null): Role;
 
     /**
      * Retrieve a role by its name.

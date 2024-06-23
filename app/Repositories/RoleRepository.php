@@ -15,7 +15,7 @@ class RoleRepository implements RoleRepositoryInterface
      * @param  string|int  $id  The ID of the role.
      * @return Role The role instance.
      */
-    public function getById(int|string $id, ?string $guardName = 'api'): Role
+    public function getRoleById(int|string $id, ?string $guardName = 'api'): Role
     {
         return Role::findById($id, $guardName);
     }
