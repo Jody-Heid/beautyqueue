@@ -11,7 +11,8 @@ use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
-    public function __construct(private readonly UserRepository $userRepository,
+    public function __construct(
+        private readonly UserRepository $userRepository,
         private readonly Responder $responder
     ) {
     }
@@ -27,7 +28,8 @@ class LoginController extends Controller
                 ->success([
                     'token' => $user->createToken($userPassword)->plainTextToken,
                     'type' => 'bearer',
-                ])->respond();
+                ])
+                ->respond();
         }
 
         return responder()
