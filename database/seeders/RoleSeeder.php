@@ -15,9 +15,10 @@ class RoleSeeder extends Seeder
     {
 
         $roles = collect([
+            'admin' => Permission::all(),
+            'staff' => [],
             'customer' => ['view services', 'book appointments', 'view own appointments', 'write reviews', 'edit own profile'],
             'hairstylist' => ['view schedule', 'manage availability', 'provide services', 'view reviews', 'edit own profile', 'manage own services', 'create appointments'],
-            'admin' => Permission::all(),
         ]);
 
         foreach ($roles as $role => $permission) {
