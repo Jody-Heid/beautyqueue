@@ -2,13 +2,16 @@
 
 namespace App\Services;
 
+use App\Models\User;
+use App\Traits\ConvertsCommaSeparatedString;
 use App\Interface\RoleRepositoryInterface;
 use App\Interface\UserRepositoryInterface;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 
 class UserService
 {
+    use ConvertsCommaSeparatedString;
+
     public function __construct(
         private readonly UserRepositoryInterface $userRepository,
         private readonly RoleRepositoryInterface $roleRepository,
@@ -29,8 +32,7 @@ class UserService
     public function createUser(array $userData): User
     {
         $user = $this->userRepository->createUser($userData);
-        $role = $this->roleRepository->getRoleById($userData['role_id']);
-        $user->assignRole($role->name);
+        $user->syncRoles($this->convertToIntegerArray($userData['role_id']));
 
         return $user;
     }
@@ -49,8 +51,7 @@ class UserService
     public function updateUser(array $userData, User $user): User
     {
         $this->userRepository->updateUser($userData, $user);
-        $role = $this->roleRepository->getRoleById($userData['role_id']);
-        $user->syncRoles($role->name);
+        $user->syncRoles($this->convertToIntegerArray($userData['role_id']));
 
         return $user;
     }
