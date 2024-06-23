@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\V1\AppointmentController;
+use App\Http\Controllers\API\V1\AppointmentStatusController;
 use App\Http\Controllers\API\V1\Auth\LoginController;
 use App\Http\Controllers\API\V1\OfferedServiceController;
 use App\Http\Controllers\API\V1\UserController;
@@ -30,4 +31,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('users', UserController::class);
     Route::apiResource('services', OfferedServiceController::class);
     Route::apiResource('appointments', AppointmentController::class);
+    Route::put('appointments/{appointment}/change-status', [AppointmentStatusController::class, 'changeAppointmentStatus']);
 });

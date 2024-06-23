@@ -33,6 +33,10 @@ class Handler extends ExceptionHandler
             //
         });
 
+        $this->renderable(function (AppointmentStatusException $e, $request) {
+            return $e->render($request);
+        });
+
     }
 
     public function render($request, Throwable $e)

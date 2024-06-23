@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Enums\AppointmentStatus;
 use App\Interface\AppointmentRepositoryInterface;
 use App\Models\Appointment;
 use App\Models\User;
@@ -47,6 +48,16 @@ class AppointmentRepository implements AppointmentRepositoryInterface
     public function updateAppointment(array $newDetails, Appointment $appointment): Appointment
     {
         $appointment->update($newDetails);
+
+        return $appointment;
+    }
+
+    /**
+     * Update an existing Appointment status
+     */
+    public function updateAppointmentStatus(AppointmentStatus $status, Appointment $appointment): Appointment
+    {
+        $appointment->update(['status' => $status->value]);
 
         return $appointment;
     }

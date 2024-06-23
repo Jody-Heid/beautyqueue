@@ -62,4 +62,9 @@ class AppointmentPolicy
     {
         return $user->hasRole('admin');
     }
+
+    public function changeAppointmentStatus(User $user, Appointment $appointment)
+    {
+        return $user->hasRole('staff') && $user->id === $appointment->staff_id;
+    }
 }

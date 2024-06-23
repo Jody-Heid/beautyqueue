@@ -2,6 +2,7 @@
 
 namespace App\Interface;
 
+use App\Enums\AppointmentStatus;
 use App\Models\Appointment;
 use App\Models\User;
 use Illuminate\Support\Collection;
@@ -32,6 +33,11 @@ interface AppointmentRepositoryInterface
      * Update an existing Appointment
      */
     public function updateAppointment(array $newDetails, Appointment $appointment): Appointment;
+
+    /**
+     * Update an existing Appointment status
+     */
+    public function updateAppointmentStatus(AppointmentStatus $status, Appointment $appointment): Appointment;
 
     /**
      * Remove an existing Appointment

@@ -2,9 +2,12 @@
 
 namespace App\Services;
 
+use App\Enums\AppointmentStatus;
+use App\Exceptions\AppointmentStatusException;
 use App\Interface\AppointmentRepositoryInterface;
 use App\Models\Appointment;
 use App\Models\User;
+use Exception;
 use Illuminate\Support\Collection;
 
 class AppointmentService
@@ -51,6 +54,22 @@ class AppointmentService
     public function updateAppointment(array $newDetails, Appointment $appointment): Appointment
     {
         return $this->appointmentRepository->updateAppointment($newDetails, $appointment);
+    }
+
+    /**
+     * Update an existing Appointment status
+     *
+     * @throws Exception
+     */
+    public function updateAppointmentStatus(string $status, Appointment $appointment): Appointment
+    {
+        $status = AppointmentStatus::tryFrom($status);
+
+        if ($status == null) {
+            throw new AppointmentStatusException();
+        }
+
+        return $this->appointmentRepository->updateAppointmentStatus($status, $appointment);
     }
 
     /**
