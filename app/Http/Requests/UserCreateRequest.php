@@ -32,7 +32,7 @@ class UserCreateRequest extends FormRequest
             'name' => 'required|string',
             'email' => 'required|email|max:255|unique:users,email',
             'cellphone_number' => ['required', 'string', 'unique:users,cellphone_number', 'regex:/^27[0-9]{9}$/'],
-            'role_id' => 'required|digits:1',
+            'role_id' => 'required|numeric',
             'password' => 'required',
         ];
     }

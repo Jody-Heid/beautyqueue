@@ -6,72 +6,63 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UserCreateRequest;
 use App\Http\Requests\UserUpdateRequest;
 use App\Models\User;
-use App\Repositories\RoleRepository;
-use App\Repositories\UserRepository;
-use App\Transformers\UserTransformer;
-use Flugg\Responder\Http\Responses\SuccessResponseBuilder;
+use App\Services\UserService;
 use Flugg\Responder\Responder;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class UserController extends Controller
 {
-    public function __construct(private readonly UserRepository $userRepository,
-        private readonly RoleRepository $roleRepository,
-        private readonly Responder $responder)
-    {
+    public function __construct(
+        private readonly UserService $userService,
+        private readonly Responder $responder
+    ) {
         $this->authorizeResource(User::class, 'user');
     }
 
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(): SuccessResponseBuilder
+    public function index(): JsonResponse
     {
-        $users = $this->userRepository->getAllUsers();
-
-        return $users->isEmpty()
-            ? $this->responder->success($users)->meta(['message' => 'No Users Found'])
-            : $this->responder->success($users, UserTransformer::class);
+        return $this->userService->listUsers();
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(UserCreateRequest $request): SuccessResponseBuilder
+    public function store(UserCreateRequest $request): JsonResponse
     {
-        $user = $this->userRepository->createUser($request->validated());
-        $role = $this->roleRepository->getById($request->validated('role_id'));
-        $user->assignRole($role->name);
+        DB::beginTransaction();
+        try {
+            $response = $this->userService->createUser($request->validated());
+            DB::commit();
 
-        return $this->responder->success($user, UserTransformer::class)->meta(['message' => 'User Created']);
+            return $response;
+        } catch (Throwable $e) {
+            DB::rollBack();
+
+            return $this->responder->error('userCreateFailed')->respond(500);
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(User $user): SuccessResponseBuilder
+    public function show(User $user): JsonResponse
     {
-        return $this->responder->success($user, UserTransformer::class);
+        return $this->userService->getUser($user);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UserUpdateRequest $request, User $user): SuccessResponseBuilder
+    public function update(UserUpdateRequest $request, User $user): JsonResponse
     {
-        $this->userRepository->updateUser($request->validated(), $user);
-        $role = $this->roleRepository->getById($request->validated('role_id'));
-        $user->syncRoles($role->name);
+        DB::beginTransaction();
+        try {
+            $response = $this->userService->updateUser($request->validated(), $user);
+            DB::commit();
 
-        return $this->responder->success($user, UserTransformer::class)->meta(['message' => 'User Updated']);
+            return $response;
+        } catch (Throwable $e) {
+            DB::rollBack();
+
+            return $this->responder->error('userCreateFailed')->respond(500);
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(User $user): SuccessResponseBuilder
+    public function destroy(User $user): JsonResponse
     {
-        $this->userRepository->deleteUser($user);
-
-        return $this->responder->success()->meta(['message' => 'User Deleted']);
+        return $this->userService->destroyUser($user);
     }
 }
