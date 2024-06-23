@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\V1\AppointmentController;
 use App\Http\Controllers\API\V1\Auth\LoginController;
 use App\Http\Controllers\API\V1\OfferedServiceController;
 use App\Http\Controllers\API\V1\UserController;
@@ -28,4 +29,5 @@ Route::prefix('auth')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('users', UserController::class);
     Route::apiResource('services', OfferedServiceController::class);
+    Route::apiResource('appointments', AppointmentController::class);
 });

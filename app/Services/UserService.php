@@ -2,10 +2,10 @@
 
 namespace App\Services;
 
-use App\Models\User;
-use App\Traits\ConvertsCommaSeparatedString;
 use App\Interface\RoleRepositoryInterface;
 use App\Interface\UserRepositoryInterface;
+use App\Models\User;
+use App\Traits\ConvertsCommaSeparatedString;
 use Illuminate\Database\Eloquent\Collection;
 
 class UserService
