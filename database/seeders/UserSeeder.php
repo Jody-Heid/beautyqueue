@@ -17,7 +17,7 @@ class UserSeeder extends Seeder
                 'name' => 'Admin',
                 'email' => 'admin@beautyqueue.com',
             ]);
-            $user->assignRole('admin', 'staff');
+            $user->assignRole('admin');
         }
     }
 }

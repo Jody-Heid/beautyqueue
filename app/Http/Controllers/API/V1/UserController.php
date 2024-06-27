@@ -10,8 +10,6 @@ use App\Services\UserService;
 use App\Transformers\UserTransformer;
 use Flugg\Responder\Responder;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\DB;
-use Throwable;
 
 class UserController extends Controller
 {
@@ -33,18 +31,9 @@ class UserController extends Controller
 
     public function store(UserCreateRequest $request): JsonResponse
     {
-        DB::beginTransaction();
-        try {
-            $user = $this->userService->createUser($request->validated());
+        $user = $this->userService->createUser($request->validated());
 
-            DB::commit();
-
-            return $this->responder->success($user, UserTransformer::class)->meta(['message' => 'User Created'])->respond();
-        } catch (Throwable $e) {
-            DB::rollBack();
-
-            return $this->responder->error('userCreateFailed')->respond(500);
-        }
+        return $this->responder->success($user, UserTransformer::class)->meta(['message' => 'User Created'])->respond();
     }
 
     public function show(User $user): JsonResponse
@@ -54,17 +43,9 @@ class UserController extends Controller
 
     public function update(UserUpdateRequest $request, User $user): JsonResponse
     {
-        DB::beginTransaction();
-        try {
-            $user = $this->userService->updateUser($request->validated(), $user);
-            DB::commit();
+        $user = $this->userService->updateUser($request->validated(), $user);
 
-            return $this->responder->success($user, UserTransformer::class)->meta(['message' => 'User Updated'])->respond();
-        } catch (Throwable $e) {
-            DB::rollBack();
-
-            return $this->responder->error('userCreateFailed')->respond(500);
-        }
+        return $this->responder->success($user, UserTransformer::class)->meta(['message' => 'User Updated'])->respond();
     }
 
     public function destroy(User $user): JsonResponse
