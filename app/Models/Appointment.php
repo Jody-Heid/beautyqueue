@@ -17,6 +17,7 @@ class Appointment extends Model
         'staff_id',
         'offered_service_id',
         'appointment_date',
+        'appointment_time',
         'status',
     ];
 
