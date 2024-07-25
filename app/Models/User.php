@@ -4,7 +4,6 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -13,7 +12,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, HasRoles, Notifiable , SoftDeletes;
+    use HasApiTokens, HasFactory, HasRoles, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -52,13 +51,18 @@ class User extends Authenticatable
         return 'api';
     }
 
-    public function customerAppointments(): HasMany
+    public function admin()
     {
-        return $this->hasMany(Appointment::class, 'customer_id');
+        return $this->hasOne(Admin::class, 'id');
     }
 
-    public function staffAppointments(): HasMany
+    public function customer()
     {
-        return $this->hasMany(Appointment::class, 'staff_id');
+        return $this->hasOne(Customer::class, 'id');
+    }
+
+    public function hairstylist()
+    {
+        return $this->hasOne(Hairstylist::class, 'id');
     }
 }

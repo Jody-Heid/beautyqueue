@@ -27,12 +27,12 @@ class Appointment extends Model
 
     public function customer(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'customer_id');
+        return $this->belongsTo(Customer::class, 'customer_id');
     }
 
-    public function staff(): BelongsTo
+    public function hairstylist(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'staff_id');
+        return $this->belongsTo(Hairstylist::class, 'staff_id');
     }
 
     public function service(): BelongsTo
