@@ -5,7 +5,8 @@ namespace App\Repositories;
 use App\Enums\AppointmentStatus;
 use App\Interface\AppointmentRepositoryInterface;
 use App\Models\Appointment;
-use App\Models\User;
+use App\Models\Customer;
+use App\Models\Hairstylist;
 use Illuminate\Support\Collection;
 
 class AppointmentRepository implements AppointmentRepositoryInterface
@@ -27,19 +28,37 @@ class AppointmentRepository implements AppointmentRepositoryInterface
     }
 
     /**
-     * Retrieve an Appointment model instance by User
+     * Retrieve an Appointment model instance by Custome
      */
-    public function getUserAppointment(User $user): Collection
+    public function getCustomerAppointments(Customer $customer): ?Collection
     {
-        return $user->appointments;
+        return $customer->customerAppointments;
+    }
+
+    /**
+     * Retrieve an Appointment model instance by Hairstylist
+     */
+    public function getStaffAppointments(Hairstylist $hairstylist): ?Collection
+    {
+        return $hairstylist->staffAppointments;
     }
 
     /**
      * Create a new Appointment
      */
-    public function createAppointment(array $appointmentDetails): Appointment
+    public function createAppointment(array $appointmentDetails, ?Customer $customer = null, ?Hairstylist $hairstylist = null): Appointment
     {
-        return Appointment::create($appointmentDetails);
+        $appointment = Appointment::create([
+            'customer_id' => $customer->id ?? $appointmentDetails['customer_id'],
+            'staff_id' => $hairstylist->id ?? $appointmentDetails['staff_id'] ?? null,
+            'offered_service_id' => $appointmentDetails['offered_service_id'],
+            'appointment_date' => $appointmentDetails['appointment_date'],
+            'appointment_time' => $appointmentDetails['appointment_time'],
+        ]);
+
+        $appointment->refresh();
+
+        return $appointment;
     }
 
     /**
@@ -48,6 +67,7 @@ class AppointmentRepository implements AppointmentRepositoryInterface
     public function updateAppointment(array $newDetails, Appointment $appointment): Appointment
     {
         $appointment->update($newDetails);
+        $appointment->refresh();
 
         return $appointment;
     }

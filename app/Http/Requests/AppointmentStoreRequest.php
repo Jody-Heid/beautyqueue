@@ -19,7 +19,7 @@ class AppointmentStoreRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->hasRole('admin');
+        return $this->user()->hairstylist()->exists() || $this->user()->customer()->exists();
     }
 
     /**
@@ -31,9 +31,10 @@ class AppointmentStoreRequest extends FormRequest
     {
         return [
             'customer_id' => ['required', 'numeric', Rule::exists('users', 'id')->withoutTrashed(), new CustomerRole],
-            'staff_id' => ['required', 'numeric', Rule::exists('users', 'id')->withoutTrashed(), new StaffRole],
+            'staff_id' => ['nullable', 'numeric', Rule::exists('users', 'id')->withoutTrashed(), new StaffRole],
             'offered_service_id' => ['required', 'numeric', Rule::exists('offered_services', 'id')->withoutTrashed()],
-            'appointment_date' => ['required', 'date_format:Y-m-d H:i:s'],
+            'appointment_date' => ['required', 'date_format:Y-m-d'],
+            'appointment_time' => ['required', 'date_format:H:i:s'],
         ];
     }
 
@@ -45,7 +46,7 @@ class AppointmentStoreRequest extends FormRequest
             'staff_id.required' => 'A staff member is required.',
             'staff_id.exists' => 'The selected staff member does not exist.',
             'appointment_date.required' => 'The appointment date is required.',
-            'appointment_date.date_format' => 'The appointment date must be in the format Y-m-d H:i:s.',
+            'appointment_date.date_format' => 'The appointment date must be in the format Y-m-d, eg 2000-03-15',
             'offered_service_id.required' => 'A service is required.',
             'offered_service_id.exists' => 'The selected offered service does not exist.',
         ];

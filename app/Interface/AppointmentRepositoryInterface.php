@@ -4,7 +4,8 @@ namespace App\Interface;
 
 use App\Enums\AppointmentStatus;
 use App\Models\Appointment;
-use App\Models\User;
+use App\Models\Customer;
+use App\Models\Hairstylist;
 use Illuminate\Support\Collection;
 
 interface AppointmentRepositoryInterface
@@ -20,14 +21,19 @@ interface AppointmentRepositoryInterface
     public function getAppointmentById(int|string $id): Appointment;
 
     /**
-     * Retrieve a Appointment model instance by User
+     * Retrieve a Appointment model instance by Customer
      */
-    public function getUserAppointment(User $user): Collection;
+    public function getCustomerAppointments(Customer $customer): ?Collection;
+
+    /**
+     * Retrieve a Appointment model instance by Hairstylist
+     */
+    public function getStaffAppointments(Hairstylist $hairstylist): ?Collection;
 
     /**
      * Create a new Appointment
      */
-    public function createAppointment(array $userDetails): Appointment;
+    public function createAppointment(array $userDetails, ?Customer $customer = null, ?Hairstylist $hairstylist = null): Appointment;
 
     /**
      * Update an existing Appointment

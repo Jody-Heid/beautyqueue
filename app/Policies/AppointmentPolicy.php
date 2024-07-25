@@ -12,7 +12,7 @@ class AppointmentPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->hasRole('staff') || $user->hasRole('customer');
+        return true;
     }
 
     /**
@@ -28,7 +28,7 @@ class AppointmentPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasRole('staff') || $user->hasRole('customer');
+        return $user->hairstylist()->exists() || $user->customer()->exists();
     }
 
     /**
@@ -44,7 +44,7 @@ class AppointmentPolicy
      */
     public function delete(User $user, Appointment $appointment): bool
     {
-        return $user->hasRole('admin');
+        return $user->admin()->exists();
     }
 
     /**
@@ -52,7 +52,7 @@ class AppointmentPolicy
      */
     public function restore(User $user, Appointment $appointment): bool
     {
-        return $user->hasRole('admin');
+        return $user->admin()->exists();
     }
 
     /**
@@ -60,11 +60,11 @@ class AppointmentPolicy
      */
     public function forceDelete(User $user, Appointment $appointment): bool
     {
-        return $user->hasRole('admin');
+        return $user->admin()->exists();
     }
 
     public function changeAppointmentStatus(User $user, Appointment $appointment)
     {
-        return $user->hasRole('staff') && $user->id === $appointment->staff_id;
+        return $user->id === $appointment->customer_id || $user->id === $appointment->staff_id;
     }
 }
