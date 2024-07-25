@@ -16,7 +16,7 @@ class UserUpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->hasRole('admin');
+        return $this->user()->admin()->exists();
     }
 
     /**
@@ -28,9 +28,9 @@ class UserUpdateRequest extends FormRequest
     {
         return [
             'name' => 'required|string',
-            'email' => 'required|email|max:255|unique:users,email,'.$this->user->id,
-            'cellphone_number' => ['required', 'string', 'unique:users,cellphone_number,'.$this->user->id, 'regex:/^27[0-9]{9}$/'],
-            'role_id' => 'required|numeric',
+            'email' => 'required|email|max:255|unique:users,email,'.$this->hairstylist->id,
+            'cellphone_number' => ['required', 'string', 'unique:users,cellphone_number,'.$this->hairstylist->id, 'regex:/^27[0-9]{9}$/'],
+            // 'role_id' => 'required|numeric',
         ];
     }
 

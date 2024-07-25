@@ -54,7 +54,7 @@ class UserRepository implements UserRepositoryInterface
     /**
      * Retrieve a User model instance by email
      */
-    public function getUserByEmail(string $email): User
+    public function getUserByEmail(string $email): ?User
     {
         return User::where('email', $email)->first();
     }

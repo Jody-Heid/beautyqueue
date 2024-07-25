@@ -20,7 +20,7 @@ interface UserRepositoryInterface
     /**
      * Retrieve a User model instance by email
      */
-    public function getUserByEmail(string $email): User;
+    public function getUserByEmail(string $email): ?User;
 
     /**
      * Retrieve a User model instance by cellphone number
