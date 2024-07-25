@@ -15,10 +15,10 @@ return new class extends Migration
         Schema::create('appointments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('customer_id')->constrained('users');
-            $table->foreignId('staff_id')->constrained('users');
+            $table->foreignId('staff_id')->nullable()->constrained('users');
             $table->foreignId('offered_service_id')->constrained('offered_services');
-            $table->dateTime('appointment_date');
-             $table->dateTime('appointment_time');
+            $table->date('appointment_date');
+            $table->time('appointment_time');
             $table->enum('status', array_column(AppointmentStatus::cases(), 'value'))->default(AppointmentStatus::Scheduled->value);
             $table->timestamps();
             $table->softDeletes();

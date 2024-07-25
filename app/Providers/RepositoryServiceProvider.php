@@ -2,11 +2,17 @@
 
 namespace App\Providers;
 
+use App\Interface\AdminRepositoryInterface;
 use App\Interface\AppointmentRepositoryInterface;
+use App\Interface\CustomerRepositoryInterface;
+use App\Interface\HairstylistRepositoryInterface;
 use App\Interface\OfferedServiceRepositoryInterface;
 use App\Interface\RoleRepositoryInterface;
 use App\Interface\UserRepositoryInterface;
+use App\Repositories\AdminRepository;
 use App\Repositories\AppointmentRepository;
+use App\Repositories\CustomerRepository;
+use App\Repositories\HairstylistRepository;
 use App\Repositories\OfferedServiceRepository;
 use App\Repositories\RoleRepository;
 use App\Repositories\UserRepository;
@@ -23,6 +29,9 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(RoleRepositoryInterface::class, RoleRepository::class);
         $this->app->bind(OfferedServiceRepositoryInterface::class, OfferedServiceRepository::class);
         $this->app->bind(AppointmentRepositoryInterface::class, AppointmentRepository::class);
+        $this->app->bind(AdminRepositoryInterface::class, AdminRepository::class);
+        $this->app->bind(HairstylistRepositoryInterface::class, HairstylistRepository::class);
+        $this->app->bind(CustomerRepositoryInterface::class, CustomerRepository::class);
     }
 
     /**
