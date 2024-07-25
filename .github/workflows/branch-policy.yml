@@ -1,0 +1,31 @@
+name: Enforce Branch Policies
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  enforce-branch-policy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v2
+
+      - name: Enforce branch policies
+        run: |
+          if [[ "${{ github.base_ref }}" == "staging" ]]; then
+            if [[ "${{ github.head_ref }}" != "development" ]]; then
+              echo "Only 'development' branch can be merged into 'staging'."
+              exit 1
+            fi
+          elif [[ "${{ github.base_ref }}" == "master" ]]; then
+            if [[ "${{ github.head_ref }}" != "staging" ]]; then
+              echo "Only 'staging' branch can be merged into 'master'."
+              exit 1
+            fi
+          elif [[ "${{ github.base_ref }}" == "development" ]]; then
+            if [[ "${{ github.head_ref }}" == "staging" || "${{ github.head_ref }}" == "master" ]]; then
+              echo "'staging' and 'master' branches cannot be merged into 'development'."
+              exit 1
+            fi
+          fi
