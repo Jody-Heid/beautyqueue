@@ -6,6 +6,8 @@ use App\Enums\AppointmentStatus;
 use App\Exceptions\AppointmentStatusException;
 use App\Interface\AppointmentRepositoryInterface;
 use App\Models\Appointment;
+use App\Models\Customer;
+use App\Models\Hairstylist;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Collection;
@@ -19,9 +21,19 @@ class AppointmentService
     /**
      * Gets all Appointments
      */
-    public function getAllAppointments(): Collection
+    public function getAppointments(User $user): ?Collection
     {
-        return $this->appointmentRepository->getAllAppointments();
+        if ($user->admin) {
+            return $this->appointmentRepository->getAllAppointments();
+        }
+        if ($user->hairstylist) {
+            return $this->appointmentRepository->getStaffAppointments($user->hairstylist);
+        }
+        if ($user->customer) {
+            return $this->appointmentRepository->getCustomerAppointments($user->customer);
+        }
+
+        throw new Exception('Error in getting appointments: ');
     }
 
     /**
@@ -33,19 +45,11 @@ class AppointmentService
     }
 
     /**
-     * Retrieve Appointments by User
-     */
-    public function getUserAppointments(User $user): Collection
-    {
-        return $this->appointmentRepository->getUserAppointment($user);
-    }
-
-    /**
      * Create a new Appointment
      */
-    public function createAppointment(array $appointmentDetails): Appointment
+    public function createAppointment(array $appointmentDetails, ?Customer $customer = null, ?Hairstylist $hairstylist = null): Appointment
     {
-        return $this->appointmentRepository->createAppointment($appointmentDetails);
+        return $this->appointmentRepository->createAppointment($appointmentDetails, $customer, $hairstylist);
     }
 
     /**
