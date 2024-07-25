@@ -3,6 +3,7 @@
 namespace App\Transformers;
 
 use App\Models\Appointment;
+use Carbon\Carbon;
 use Flugg\Responder\Transformers\Transformer;
 
 class AppointmentTransformer extends Transformer
@@ -20,8 +21,8 @@ class AppointmentTransformer extends Transformer
      * @var array
      */
     protected $load = [
-        'customer' => UserTransformer::class,
-        'staff' => UserTransformer::class,
+        'customer' => CustomerTransformer::class,
+        'hairstylist' => HairstylistTransformer::class,
         'service' => OfferedServiceTransformer::class,
     ];
 
@@ -35,6 +36,7 @@ class AppointmentTransformer extends Transformer
         return [
             'id' => (int) $appointment->id,
             'appointment_date' => $appointment->appointment_date,
+            'appointment_time' => Carbon::createFromFormat('H:i:s', $appointment->appointment_time)->format('H:i A'),
             'status' => $appointment->status,
         ];
     }
