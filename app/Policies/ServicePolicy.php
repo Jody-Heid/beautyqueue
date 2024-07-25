@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\Service;
+use App\Models\OfferedService;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -21,7 +21,7 @@ class ServicePolicy
     /**
      * Determine whether the user can view the service.
      */
-    public function view(User $user, Service $service)
+    public function view(User $user, OfferedService $service)
     {
         return true;
     }
@@ -31,38 +31,38 @@ class ServicePolicy
      */
     public function create(User $user)
     {
-        return $user->hasRole('admin');
+        return $user->admin()->exists();
     }
 
     /**
      * Determine whether the user can update the service.
      */
-    public function update(User $user, Service $service)
+    public function update(User $user, OfferedService $service)
     {
-        return $user->hasRole('admin');
+        return $user->admin()->exists();
     }
 
     /**
      * Determine whether the user can delete the service.
      */
-    public function delete(User $user, Service $service)
+    public function delete(User $user, OfferedService $service)
     {
-        return $user->hasRole('admin');
+        return $user->admin()->exists();
     }
 
     /**
      * Determine whether the user can restore the service.
      */
-    public function restore(User $user, Service $service)
+    public function restore(User $user, OfferedService $service)
     {
-        return $user->hasRole('admin');
+        return $user->admin()->exists();
     }
 
     /**
      * Determine whether the user can permanently delete the service.
      */
-    public function forceDelete(User $user, Service $service)
+    public function forceDelete(User $user, OfferedService $service)
     {
-        return $user->hasRole('admin');
+        return $user->admin()->exists();
     }
 }

@@ -16,7 +16,7 @@ class ServiceStoreRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->hasRole('admin');
+        return $this->user()->admin()->exists();
     }
 
     /**
