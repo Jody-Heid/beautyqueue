@@ -14,7 +14,7 @@ class CustomerRoleScope implements Scope
      */
     public function apply(Builder $builder, Model $model): void
     {
-        $customerRole = Role::findByName('customer', 'api');
+        $customerRole = Role::findByName('customer');
         $builder->whereHas('roles', function (Builder $query) use ($customerRole) {
             $query->where('role_id', $customerRole->id);
         });
