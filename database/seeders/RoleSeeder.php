@@ -21,7 +21,7 @@ class RoleSeeder extends Seeder
         ]);
 
         foreach ($roles as $role) {
-            if (!Role::where('name', $role)->exists()) {
+            if (! Role::where('name', $role)->exists()) {
                 Role::create(['name' => $role]);
             }
         }
