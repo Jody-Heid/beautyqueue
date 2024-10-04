@@ -8,7 +8,7 @@ class Admin extends User
 {
     protected $table = 'users';
 
-    protected $guard_name = 'api';
+    protected $guard_name = 'web';
 
     protected static function booted()
     {

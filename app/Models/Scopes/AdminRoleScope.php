@@ -14,7 +14,7 @@ class AdminRoleScope implements Scope
      */
     public function apply(Builder $builder, Model $model): void
     {
-        $adminRole = Role::findByName('admin', 'api');
+        $adminRole = Role::findByName('admin', 'web');
         $builder->whereHas('roles', function (Builder $query) use ($adminRole) {
             $query->where('role_id', $adminRole->id);
         });

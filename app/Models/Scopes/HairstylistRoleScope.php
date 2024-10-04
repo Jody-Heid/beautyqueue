@@ -14,7 +14,7 @@ class HairstylistRoleScope implements Scope
      */
     public function apply(Builder $builder, Model $model): void
     {
-        $hairstylistRole = Role::findByName('hairstylist', 'api');
+        $hairstylistRole = Role::findByName('hairstylist');
         $builder->whereHas('roles', function (Builder $query) use ($hairstylistRole) {
             $query->where('role_id', $hairstylistRole->id);
         });
