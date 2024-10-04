@@ -11,10 +11,12 @@
             </div>
 
             @if (session('status'))
-            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
-                {{ session('status') }}
-            </div>
+            <x-notifications.success-notification :message="session('status')" />
             @endif
+
+            @error('error')
+            <x-notifications.error-notification :message="$message" />
+            @enderror
 
             <form class="mt-8 space-y-6" wire:submit.prevent="sendResetLink">
                 <div>

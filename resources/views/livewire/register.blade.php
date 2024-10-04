@@ -14,6 +14,10 @@
                 </p>
             </div>
 
+            @if ($error)
+            <x-notifications.error-notification :message="$error" />
+            @endif
+
             <form class="mt-8 space-y-6" wire:submit.prevent="submit">
                 <div>
                     <label for="name" class="sr-only">Name</label>

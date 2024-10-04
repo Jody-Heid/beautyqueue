@@ -8,10 +8,13 @@
             </div>
 
             @if (session('status'))
-            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
-                {{ session('status') }}
-            </div>
+            <x-notifications.success-notification :message="session('status')" />
             @endif
+
+            @error('error')
+            <x-notifications.error-notification :message="$message" />
+            @enderror
+
 
             <form class="mt-8 space-y-6" wire:submit.prevent="resetPassword">
                 <input type="hidden" wire:model="token">
@@ -45,7 +48,7 @@
                 </div>
 
                 <div>
-                    <button type="submit" wire:navigate
+                    <button type="submit"
                         class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
                         <span wire:loading.remove>Reset Password</span>
                         <span wire:loading>

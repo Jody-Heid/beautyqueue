@@ -2,14 +2,17 @@
 
 namespace App\Livewire;
 
-use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Component;
 
 class Login extends Component
 {
     public $email = '';
+
     public $password = '';
+
     public $rememberMe = false;
+
     public $authError = '';
 
     protected $rules = [
@@ -24,13 +27,14 @@ class Login extends Component
 
     public function submit()
     {
-        $this->authError = ''; 
+        $this->authError = '';
         $this->validate();
-        
+
         if ($this->attemptLogin()) {
             session()->regenerate();
-            //TODO: add dashboard view
-            return $this->redirect(route('dashboard'), navigate: true);
+
+            //TODO: add dashboard redirect here
+            return true;
         }
 
         $this->authError = 'The provided credentials do not match our records.';

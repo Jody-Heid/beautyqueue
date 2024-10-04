@@ -2,19 +2,23 @@
 
 namespace App\Livewire;
 
-use Livewire\Component;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth;
 use App\Services\CustomerService;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Auth;
+use Livewire\Component;
 use Spatie\Permission\Models\Role;
 
 class Register extends Component
 {
     public $name;
+
     public $email;
+
     public $password;
+
     public $password_confirmation;
+
+    public $error = '';
 
     protected $rules = [
         'name' => 'required|string|max:255',
@@ -24,20 +28,24 @@ class Register extends Component
 
     public function submit()
     {
+        $this->error = '';
         $this->validate();
 
         $customerService = app(CustomerService::class);
+
         $customer = $customerService->createCustomer([
             'name' => $this->name,
             'email' => $this->email,
             'password' => $this->password,
         ]);
-        
+
         $customer->assignRole(Role::findByName('customer', 'web'));
+
+        event(new Registered($customer));
 
         Auth::login($customer);
 
-        return redirect()->route('dashboard');
+        return redirect()->route('verification.notice');
     }
 
     public function render()

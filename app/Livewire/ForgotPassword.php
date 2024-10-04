@@ -2,8 +2,8 @@
 
 namespace App\Livewire;
 
-use Livewire\Component;
 use Illuminate\Support\Facades\Password;
+use Livewire\Component;
 
 class ForgotPassword extends Component
 {
@@ -23,7 +23,7 @@ class ForgotPassword extends Component
             session()->flash('status', __($status));
             $this->email = '';
         } else {
-            $this->addError('email', __($status));
+            $this->addError('error', __($status));
         }
     }
 

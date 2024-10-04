@@ -15,15 +15,7 @@
             </div>
 
             @if ($authError)
-            <div class="rounded-md bg-red-50 p-4 mb-4">
-                <div class="flex">
-                    <div class="ml-3">
-                        <p class="text-sm font-medium text-red-800">
-                            {{ $authError }}
-                        </p>
-                    </div>
-                </div>
-            </div>
+            <x-notifications.error-notification :message="$authError" />
             @endif
 
             <form class="mt-8 space-y-6" wire:submit.prevent="submit">
