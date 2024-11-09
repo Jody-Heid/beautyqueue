@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\API\V1\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CustomerCreateRequest;
+use App\Http\Requests\RegisterCustomerRequest;
 use App\Services\CustomerService;
 use App\Transformers\CustomerTransformer;
 use Flugg\Responder\Contracts\Responder;
@@ -18,7 +18,7 @@ class RegisterController extends Controller
     ) {
     }
 
-    public function register(CustomerCreateRequest $request): JsonResponse
+    public function register(RegisterCustomerRequest $request): JsonResponse
     {
         $customer = $this->customerService->createCustomer($request->validated());
         $customer->assignRole(Role::findByName('customer', 'api'));
