@@ -9,6 +9,7 @@ use App\Models\Customer;
 use App\Services\CustomerService;
 use App\Transformers\CustomerTransformer;
 use Flugg\Responder\Responder;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class CustomerController extends Controller
@@ -40,6 +41,10 @@ class CustomerController extends Controller
         $customer = $this->customerService->createCustomer($request->validated());
         $customer->assignRole(Role::findByName('customer', 'api'));
 
+        if (! blank($validatedPermissions = $request->validated('permissions'))) {
+            $customer->syncPermissions(Permission::whereIn('name', $validatedPermissions)->get());
+        }
+
         return $this->responder->success($customer, CustomerTransformer::class)->meta(['message' => 'Customer Created'])->respond();
     }
 
@@ -57,6 +62,10 @@ class CustomerController extends Controller
     public function update(CustomerUpdateRequest $request, Customer $customer)
     {
         $customer = $this->customerService->updateCustomer($request->validated(), $customer);
+
+        if (! blank($validatedPermissions = $request->validated('permissions'))) {
+            $customer->syncPermissions(Permission::whereIn('name', $validatedPermissions)->get());
+        }
 
         return $this->responder->success($customer, CustomerTransformer::class)->meta(['message' => 'Customer Updated'])->respond();
     }

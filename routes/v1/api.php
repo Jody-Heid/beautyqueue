@@ -25,13 +25,13 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->group(function () {
     Route::post('login', [LoginController::class, 'authentication']);
-    Route::post('register/customer', [RegisterController::class, 'register']);
+    Route::post('register', [RegisterController::class, 'register']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('admin')->group(function () {
-        Route::apiResource('customers', CustomerController::class)->except(['create', 'store', 'edit', 'update']);
+        Route::apiResource('customers', CustomerController::class);
         Route::apiResource('admins', AdminController::class);
         Route::apiResource('hairstylists', HairstylistController::class);
         Route::apiResource('users', UserController::class);
