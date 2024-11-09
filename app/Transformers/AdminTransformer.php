@@ -27,7 +27,6 @@ class AdminTransformer extends Transformer
     public function transform(Admin $admin): array
     {
         return [
-            'id' => (int) $admin->id,
             'name' => $admin->name,
             'email' => $admin->email,
             'cellphone_number' => $admin->cellphone_number,

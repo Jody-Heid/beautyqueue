@@ -27,7 +27,6 @@ class CustomerTransformer extends Transformer
     public function transform(Customer $customer): array
     {
         return [
-            'id' => (int) $customer->id,
             'name' => $customer->name,
             'email' => $customer->email,
             'cellphone_number' => $customer->cellphone_number,

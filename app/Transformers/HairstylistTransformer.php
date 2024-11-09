@@ -27,7 +27,6 @@ class HairstylistTransformer extends Transformer
     public function transform(Hairstylist $hairstylist): array
     {
         return [
-            'id' => (int) $hairstylist->id,
             'name' => $hairstylist->name,
             'email' => $hairstylist->email,
             'cellphone_number' => $hairstylist->cellphone_number,
