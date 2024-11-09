@@ -16,7 +16,7 @@ class HairstylistUpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->hairstylist()->exists();
+        return $this->user()->can('update_any_hairstylist') || $this->user()->can('update_hairstylist');
     }
 
     /**
@@ -30,6 +30,8 @@ class HairstylistUpdateRequest extends FormRequest
             'name' => 'required|string',
             'email' => 'required|email|max:255|unique:users,email,'.$this->hairstylist->id,
             'cellphone_number' => ['required', 'string', 'unique:users,cellphone_number,'.$this->hairstylist->id, 'regex:/^27[0-9]{9}$/'],
+            'permissions' => 'nullable|array',
+            'permissions.*' => 'string|exists:permissions,name',
         ];
     }
 

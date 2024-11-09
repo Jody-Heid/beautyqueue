@@ -7,14 +7,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Hairstylist extends User
 {
+    protected $guard_name = 'api';
+
     /**
      * The table associated with the model.
      *
      * @var string
      */
     protected $table = 'users';
-
-    protected $guard_name = 'web';
 
     protected static function booted()
     {

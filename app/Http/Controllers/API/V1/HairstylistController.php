@@ -9,6 +9,7 @@ use App\Models\Hairstylist;
 use App\Services\HairstylistService;
 use App\Transformers\HairstylistTransformer;
 use Flugg\Responder\Responder;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class HairstylistController extends Controller
@@ -41,6 +42,10 @@ class HairstylistController extends Controller
         $hairstylist = $this->hairstylistService->createHairstylist($request->validated());
         $hairstylist->assignRole(Role::findByName('hairstylist', 'api'));
 
+        if (! blank($validatedPermissions = $request->validated('permissions'))) {
+            $hairstylist->syncPermissions(Permission::whereIn('name', $validatedPermissions)->get());
+        }
+
         return $this->responder->success($hairstylist, HairstylistTransformer::class)->meta(['message' => 'Hairstylist Created'])->respond();
     }
 
@@ -58,6 +63,10 @@ class HairstylistController extends Controller
     public function update(HairstylistUpdateRequest $request, Hairstylist $hairstylist)
     {
         $hairstylist = $this->hairstylistService->updateHairstylist($request->validated(), $hairstylist);
+
+        if (! blank($validatedPermissions = $request->validated('permissions'))) {
+            $hairstylist->syncPermissions(Permission::whereIn('name', $validatedPermissions)->get());
+        }
 
         return $this->responder->success($hairstylist, HairstylistTransformer::class)->meta(['message' => 'Hairstylist Updated'])->respond();
     }

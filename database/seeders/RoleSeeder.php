@@ -22,7 +22,7 @@ class RoleSeeder extends Seeder
 
         foreach ($roles as $role) {
             if (! Role::where('name', $role)->exists()) {
-                Role::create(['name' => $role]);
+                Role::create(['name' => $role, 'guard_name' => 'api']);
             }
         }
     }
