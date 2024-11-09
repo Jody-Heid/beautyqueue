@@ -13,23 +13,21 @@ class PermissionSeeder extends Seeder
     public function run(): void
     {
         $permissions = [
-            'view services',
-            'book appointments',
-            'view own appointments',
-            'write reviews',
-            'edit own profile',
-            'view schedule',
-            'manage availability',
-            'provide services',
-            'view reviews',
-            'manage own services',
-            'create appointments',
-            'manage users',
-            'manage roles',
-            'manage services',
-            'view all appointments',
-            'manage reviews',
-            'view system settings',
+            // Hairstylist permissions
+            'view_hairstylist',
+            'create_hairstylist',
+            'update_hairstylist',
+            'delete_hairstylist',
+            'view_any_hairstylist',
+            'update_any_hairstylist',
+
+            // Customer permissions
+            'view_customer',
+            'create_customer',
+            'update_customer',
+            'delete_customer',
+            'view_any_customer',
+            'update_any_customer',
         ];
 
         foreach ($permissions as $permission) {

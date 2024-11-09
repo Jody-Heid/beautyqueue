@@ -1,11 +1,6 @@
 <?php
 
-use App\Livewire\EmailVerification;
-use App\Livewire\ForgotPassword;
-use App\Livewire\Login;
 use App\Livewire\Register;
-use App\Livewire\ResetPassword;
-use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,5 +12,3 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
-
