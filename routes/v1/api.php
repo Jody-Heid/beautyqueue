@@ -24,17 +24,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 Route::prefix('auth')->group(function () {
     Route::get('login', [LoginController::class, 'authentication']);
 })->name('login');
 
-Route::post('register/user', [RegisterController::class, 'register']);
+
+Route::post('register/customer', [RegisterController::class, 'register']);
 
 Route::middleware('auth:sanctum')->group(function () {
+    
     Route::prefix('admin')->middleware('admin')->group(function () {
         Route::apiResource('customers', CustomerController::class)->except(['create', 'store', 'edit', 'update']);
         Route::apiResource('admins', AdminController::class);
