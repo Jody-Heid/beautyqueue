@@ -34,6 +34,15 @@ class PermissionSeeder extends Seeder
             'create_services',
             'update_services',
             'delete_services',
+
+            // Offered Appointments permissions
+            'view_appointments',
+            'create_appointments',
+            'update_appointments',
+            'delete_appointments',
+            'view_any_appointments',
+            'update_any_appointments',
+            'delete_any_appointments',
         ];
 
         foreach ($permissions as $permission) {
