@@ -28,6 +28,12 @@ class PermissionSeeder extends Seeder
             'delete_customer',
             'view_any_customer',
             'update_any_customer',
+            
+            // Offered Service permissions
+            'view_services',
+            'create_services',
+            'update_services',
+            'delete_services',
         ];
 
         foreach ($permissions as $permission) {
