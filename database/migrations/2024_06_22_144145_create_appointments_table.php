@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('offered_service_id')->constrained('offered_services');
             $table->date('appointment_date');
             $table->time('appointment_time');
-            $table->enum('status', array_column(AppointmentStatus::cases(), 'value'))->default(AppointmentStatus::Scheduled->value);
+            $table->enum('status', array_column(AppointmentStatus::cases(), 'value'))->default(AppointmentStatus::SCHEDULED->value);
             $table->timestamps();
             $table->softDeletes();
         });
