@@ -34,7 +34,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('customers', CustomerController::class);
         Route::apiResource('admins', AdminController::class);
         Route::apiResource('hairstylists', HairstylistController::class);
-        Route::apiResource('users', UserController::class);
         Route::apiResource('appointments', AppointmentController::class);
         Route::put('appointments/{appointment}/change-status', [AppointmentStatusController::class, 'changeAppointmentStatus']);
     });
