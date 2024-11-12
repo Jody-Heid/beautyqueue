@@ -23,8 +23,8 @@ class AppointmentPolicy
      */
     public function view(User $user, Appointment $appointment): Response
     {
-        return $user->can('view_any_appointments') || 
-            ($user->can('view_appointments') && 
+        return $user->can('view_any_appointments') ||
+            ($user->can('view_appointments') &&
                 ($user->id === $appointment->customer_id || $user->id === $appointment->staff_id))
             ? Response::allow()
             : Response::denyAsNotFound();
@@ -45,8 +45,8 @@ class AppointmentPolicy
      */
     public function update(User $user, Appointment $appointment): Response
     {
-        return $user->can('update_any_appointments') || 
-            ($user->can('update_appointments') && 
+        return $user->can('update_any_appointments') ||
+            ($user->can('update_appointments') &&
                 ($user->id === $appointment->customer_id || $user->id === $appointment->staff_id))
             ? Response::allow()
             : Response::denyAsNotFound();
@@ -83,8 +83,8 @@ class AppointmentPolicy
      */
     public function changeAppointmentStatus(User $user, Appointment $appointment): Response
     {
-        return $user->can('update_any_appointments') || 
-            ($user->can('update_appointments') && 
+        return $user->can('update_any_appointments') ||
+            ($user->can('update_appointments') &&
                 ($user->id === $appointment->customer_id || $user->id === $appointment->staff_id))
             ? Response::allow()
             : Response::denyAsNotFound();

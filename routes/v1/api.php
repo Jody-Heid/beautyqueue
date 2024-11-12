@@ -1,15 +1,9 @@
 <?php
 
-use App\Http\Controllers\API\V1\AdminController;
 use App\Http\Controllers\API\V1\AppointmentController;
 use App\Http\Controllers\API\V1\AppointmentStatusController;
 use App\Http\Controllers\API\V1\Auth\LoginController;
-use App\Http\Controllers\API\V1\Auth\RegisterController;
-use App\Http\Controllers\API\V1\CustomerAppointmentController;
-use App\Http\Controllers\API\V1\CustomerController;
-use App\Http\Controllers\API\V1\HairstylistController;
 use App\Http\Controllers\API\V1\OfferedServiceController;
-use App\Http\Controllers\API\V1\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
