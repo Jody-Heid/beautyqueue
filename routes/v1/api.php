@@ -25,31 +25,20 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->group(function () {
     Route::post('login', [LoginController::class, 'authentication']);
-    Route::post('register', [RegisterController::class, 'register']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('admin')->group(function () {
-        Route::apiResource('customers', CustomerController::class);
-        Route::apiResource('admins', AdminController::class);
-        Route::apiResource('hairstylists', HairstylistController::class);
         Route::apiResource('appointments', AppointmentController::class);
         Route::put('appointments/{appointment}/change-status', [AppointmentStatusController::class, 'changeAppointmentStatus']);
     });
 
     Route::prefix('staff')->group(function () {
         Route::prefix('hairstylist')->group(function () {
-            Route::apiResource('hairstylists', HairstylistController::class)->only(['show', 'update']);
             Route::apiResource('appointments', AppointmentController::class)->except(['delete']);
             Route::put('appointments/{appointment}/change-status', [AppointmentStatusController::class, 'changeAppointmentStatus']);
         });
-    });
-
-    Route::prefix('customer')->group(function () {
-        Route::apiResource('customers', CustomerController::class)->except(['delete', 'create', 'store']);
-        Route::apiResource('appointments', CustomerAppointmentController::class)->except(['delete']);
-        Route::put('appointments/{appointment}/change-status', [AppointmentStatusController::class, 'changeAppointmentStatus']);
     });
 
     Route::apiResource('services', OfferedServiceController::class);

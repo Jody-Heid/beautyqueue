@@ -47,19 +47,4 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
-
-    public function admin()
-    {
-        return $this->hasOne(Admin::class, 'id');
-    }
-
-    public function customer()
-    {
-        return $this->hasOne(Customer::class, 'id');
-    }
-
-    public function hairstylist()
-    {
-        return $this->hasOne(Hairstylist::class, 'id');
-    }
 }
