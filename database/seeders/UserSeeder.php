@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class UserSeeder extends Seeder
@@ -12,13 +11,6 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        if (! User::where('email', 'admin@beautyqueue.co.za')->exists()) {
-            $user = User::factory()->create([
-                'name' => 'Admin',
-                'email' => 'admin@beautyqueue.com',
-            ]);
-
-            $user->assignRole('admin');
-        }
+        //TODO: add seeders for users
     }
 }

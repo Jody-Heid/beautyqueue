@@ -1,9 +1,7 @@
 <?php
 
-use App\Http\Controllers\API\V1\AppointmentController;
-use App\Http\Controllers\API\V1\AppointmentStatusController;
-use App\Http\Controllers\API\V1\Auth\LoginController;
-use App\Http\Controllers\API\V1\OfferedServiceController;
+use App\Http\Controllers\API\V1\Auth\StaffLoginController;
+use App\Http\Controllers\API\V1\Auth\UserLoginController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,22 +16,15 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::prefix('auth')->group(function () {
-    Route::post('login', [LoginController::class, 'authentication']);
+    Route::post('/staff/login', [StaffLoginController::class, 'authentication']);
+    Route::post('login', [UserLoginController::class, 'authentication']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {
 
-    Route::prefix('admin')->group(function () {
-        Route::apiResource('appointments', AppointmentController::class);
-        Route::put('appointments/{appointment}/change-status', [AppointmentStatusController::class, 'changeAppointmentStatus']);
-    });
-
     Route::prefix('staff')->group(function () {
-        Route::prefix('hairstylist')->group(function () {
-            Route::apiResource('appointments', AppointmentController::class)->except(['delete']);
-            Route::put('appointments/{appointment}/change-status', [AppointmentStatusController::class, 'changeAppointmentStatus']);
+        Route::prefix('admin')->group(function () {
+            //TODO: add admin routes
         });
     });
-
-    Route::apiResource('services', OfferedServiceController::class);
 });

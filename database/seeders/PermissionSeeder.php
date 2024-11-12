@@ -13,14 +13,6 @@ class PermissionSeeder extends Seeder
     public function run(): void
     {
         $permissions = [
-            // Hairstylist permissions
-            'view_hairstylist',
-            'create_hairstylist',
-            'update_hairstylist',
-            'delete_hairstylist',
-            'view_any_hairstylist',
-            'update_any_hairstylist',
-
             // Customer permissions
             'view_customer',
             'create_customer',

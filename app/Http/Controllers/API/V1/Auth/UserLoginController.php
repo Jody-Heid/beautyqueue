@@ -9,7 +9,7 @@ use Flugg\Responder\Contracts\Responder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 
-class LoginController extends Controller
+class UserLoginController extends Controller
 {
     public function __construct(
         private readonly UserRepository $userRepository,

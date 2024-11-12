@@ -5,5 +5,6 @@ namespace App\Enums;
 enum UserTypes: string
 {
     case CUSTOMER = 'customer';
-    case STAFF = 'staff';
+    case ADMIN = 'admin';
+    case TENANT = 'tenant';
 }
