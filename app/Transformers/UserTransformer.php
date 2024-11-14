@@ -1,4 +1,4 @@
-app/Transformers/UserTransformer.php<?php
+<?php
 
 namespace App\Transformers;
 
@@ -29,8 +29,8 @@ class UserTransformer extends Transformer
         return [
             'name' => $user->name,
             'email' => $user->email,
-            'cellphone_number' => $user->cellphone_number,
             'role' => $user->getRoleNames(),
+            'permissions' => $user->getPermissionNames(),
         ];
     }
 }

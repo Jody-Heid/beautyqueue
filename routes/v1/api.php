@@ -4,6 +4,7 @@ use App\Http\Controllers\API\V1\Auth\StaffLoginController;
 use App\Http\Controllers\API\V1\Auth\UserLoginController;
 use App\Http\Controllers\API\V1\StaffController;
 use App\Http\Controllers\API\V1\TenantController;
+use App\Http\Controllers\API\V1\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,6 +28,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::prefix('admin')->group(function () {
             Route::apiResource('tenant', TenantController::class);
             Route::apiResource('staff', StaffController::class);
+            Route::apiResource('user', UserController::class);
         });
     });
 });

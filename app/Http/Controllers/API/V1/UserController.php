@@ -31,7 +31,13 @@ class UserController extends Controller
 
     public function store(UserCreateRequest $request): JsonResponse
     {
-        $user = $this->userService->createUser($request->validated());
+        $user = $this->userService->createUser($validatedData = $request->validated());
+
+        $user->assignRole($validatedData['role']);
+
+        if (! blank($validatedData['permissions'])) {
+            $user->syncPermissions($validatedData['permissions']);
+        }
 
         return $this->responder->success($user, UserTransformer::class)->meta(['message' => 'User Created'])->respond();
     }
@@ -43,7 +49,13 @@ class UserController extends Controller
 
     public function update(UserUpdateRequest $request, User $user): JsonResponse
     {
-        $user = $this->userService->updateUser($request->validated(), $user);
+        $user = $this->userService->updateUser($validatedData = $request->validated(), $user);
+
+        $user->assignRole($validatedData['role']);
+
+        if (! blank($validatedData['permissions'])) {
+            $user->syncPermissions($validatedData['permissions']);
+        }
 
         return $this->responder->success($user, UserTransformer::class)->meta(['message' => 'User Updated'])->respond();
     }

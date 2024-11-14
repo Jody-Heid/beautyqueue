@@ -16,7 +16,7 @@ class UserUpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->admin()->exists();
+        return $this->user()->can('update_user') || $this->user()->can('update_any_user');
     }
 
     /**
