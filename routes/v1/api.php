@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\V1\Auth\StaffLoginController;
 use App\Http\Controllers\API\V1\Auth\UserLoginController;
+use App\Http\Controllers\API\V1\StaffController;
 use App\Http\Controllers\API\V1\TenantController;
 use Illuminate\Support\Facades\Route;
 
@@ -22,10 +23,10 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
-
     Route::prefix('staff')->group(function () {
         Route::prefix('admin')->group(function () {
             Route::apiResource('tenant', TenantController::class);
+            Route::apiResource('staff', StaffController::class);
         });
     });
 });

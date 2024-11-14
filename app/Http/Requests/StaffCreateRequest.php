@@ -8,7 +8,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
 
-class UserCreateRequest extends FormRequest
+class StaffCreateRequest extends FormRequest
 {
     use ApiResponseHelpers;
 
@@ -19,7 +19,7 @@ class UserCreateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->admin()->exists();
+        return $this->user()->can('create_staff');
     }
 
     /**
@@ -31,7 +31,7 @@ class UserCreateRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email',
+            'email' => 'required|email|max:255|unique:staff,email',
             'password' => ['required', 'string', 'confirmed', Password::defaults()],
             'role' => 'required|string|exists:roles,name',
             'permissions' => 'nullable|array',

@@ -5,10 +5,9 @@ namespace App\Http\Requests;
 use App\Traits\ApiResponseHelpers;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
 
-class UserCreateRequest extends FormRequest
+class StaffUpdateRequest extends FormRequest
 {
     use ApiResponseHelpers;
 
@@ -19,7 +18,7 @@ class UserCreateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->admin()->exists();
+        return $this->user()->can('update_staff') || $this->user()->can('update_any_staff');
     }
 
     /**
@@ -31,8 +30,7 @@ class UserCreateRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email',
-            'password' => ['required', 'string', 'confirmed', Password::defaults()],
+            'email' => 'required|email|max:255|unique:staff,email,'.$this->staff->id,
             'role' => 'required|string|exists:roles,name',
             'permissions' => 'nullable|array',
             'permissions.*' => 'string|exists:permissions,name',
@@ -41,7 +39,6 @@ class UserCreateRequest extends FormRequest
 
     protected function failedValidation(Validator $validator)
     {
-
         if ($this->wantsJson()) {
             $response = $this->respondFailedValidation($validator->errors()->first());
         }

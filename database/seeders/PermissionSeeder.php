@@ -13,6 +13,14 @@ class PermissionSeeder extends Seeder
     public function run(): void
     {
         $permissions = [
+            // Staff permissions
+            'view_staff',
+            'create_staff',
+            'update_staff',
+            'delete_staff',
+            'view_any_staff',
+            'update_any_staff',
+
             // Tenant permissions
             'view_tenants',
             'create_tenants',

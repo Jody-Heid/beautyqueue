@@ -1,11 +1,11 @@
-app/Transformers/UserTransformer.php<?php
+<?php
 
 namespace App\Transformers;
 
-use App\Models\User;
+use App\Models\Staff;
 use Flugg\Responder\Transformers\Transformer;
 
-class UserTransformer extends Transformer
+class StaffTransformer extends Transformer
 {
     /**
      * List of available relations.
@@ -24,13 +24,13 @@ class UserTransformer extends Transformer
     /**
      * Transform the model.
      */
-    public function transform(User $user): array
+    public function transform(Staff $staff): array
     {
         return [
-            'name' => $user->name,
-            'email' => $user->email,
-            'cellphone_number' => $user->cellphone_number,
-            'role' => $user->getRoleNames(),
+            'name' => $staff->name,
+            'email' => $staff->email,
+            'role' => $staff->getRoleNames(),
+            'permissions' => $staff->getPermissionNames(),
         ];
     }
 }

@@ -32,7 +32,6 @@ class StaffService
     public function createStaff(array $staffData): Staff
     {
         $staff = $this->staffRepository->createStaff($staffData);
-        $staff->syncRoles($this->convertToIntegerArray($staffData['role_id']));
 
         return $staff;
     }
@@ -51,7 +50,6 @@ class StaffService
     public function updateStaff(array $staffData, Staff $staff): Staff
     {
         $this->staffRepository->updateStaff($staffData, $staff);
-        $staff->syncRoles($this->convertToIntegerArray($staffData['role_id']));
 
         return $staff;
     }

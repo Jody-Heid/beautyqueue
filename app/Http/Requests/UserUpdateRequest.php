@@ -29,16 +29,10 @@ class UserUpdateRequest extends FormRequest
         return [
             'name' => 'required|string',
             'email' => 'required|email|max:255|unique:users,email,'.$this->hairstylist->id,
-            'cellphone_number' => ['required', 'string', 'unique:users,cellphone_number,'.$this->hairstylist->id, 'regex:/^27[0-9]{9}$/'],
-            // 'role_id' => 'required|numeric',
-        ];
-    }
+            'role' => 'required|string|exists:roles,name',
+            'permissions' => 'nullable|array',
+            'permissions.*' => 'string|exists:permissions,name',
 
-    public function messages()
-    {
-        return [
-            'cellphone_number.required' => 'The cellphone number is required.',
-            'cellphone_number.regex' => 'The cellphone number must start with 27 and be followed by 9 digits.',
         ];
     }
 
