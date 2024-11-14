@@ -5,9 +5,10 @@ namespace App\Http\Requests;
 use App\Traits\ApiResponseHelpers;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
 
-class LoginRequest extends FormRequest
+class CustomerRegistrationRequest extends FormRequest
 {
     use ApiResponseHelpers;
 
@@ -29,18 +30,12 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|email|max:255|exists:users,email',
-            'password' => 'required',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email',
+            'password' => ['required', 'string', 'confirmed', Password::defaults()],
         ];
     }
 
-    /**
-     * Handle a failed validation attempt.
-     *
-     * @return void
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
     protected function failedValidation(Validator $validator)
     {
 

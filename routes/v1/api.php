@@ -1,7 +1,8 @@
 <?php
 
+use App\Http\Controllers\API\V1\Auth\CustomerLoginController;
+use App\Http\Controllers\API\V1\Auth\CustomerRegistrationController;
 use App\Http\Controllers\API\V1\Auth\StaffLoginController;
-use App\Http\Controllers\API\V1\Auth\UserLoginController;
 use App\Http\Controllers\API\V1\StaffController;
 use App\Http\Controllers\API\V1\TenantController;
 use App\Http\Controllers\API\V1\UserController;
@@ -19,8 +20,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::prefix('auth')->group(function () {
-    Route::post('/staff/login', [StaffLoginController::class, 'authentication']);
-    Route::post('login', [UserLoginController::class, 'authentication']);
+    Route::post('staff/login', [StaffLoginController::class, 'login']);
+    Route::post('customer/login', [CustomerLoginController::class, 'login']);
+    Route::post('customer/register', [CustomerRegistrationController::class, 'register']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {

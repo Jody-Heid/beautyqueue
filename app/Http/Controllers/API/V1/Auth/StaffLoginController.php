@@ -17,7 +17,7 @@ class StaffLoginController extends Controller
     ) {
     }
 
-    public function authentication(StaffLoginRequest $request): JsonResponse
+    public function login(StaffLoginRequest $request): JsonResponse
     {
         $staff = $this->staffRepository->getStaffByEmail($request->validated('email'));
 

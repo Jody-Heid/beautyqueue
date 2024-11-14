@@ -9,7 +9,7 @@ use Flugg\Responder\Contracts\Responder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 
-class UserLoginController extends Controller
+class CustomerLoginController extends Controller
 {
     public function __construct(
         private readonly UserRepository $userRepository,
@@ -17,7 +17,7 @@ class UserLoginController extends Controller
     ) {
     }
 
-    public function authentication(LoginRequest $request): JsonResponse
+    public function login(LoginRequest $request): JsonResponse
     {
         $user = $this->userRepository->getUserByEmail($request->validated('email'));
 
