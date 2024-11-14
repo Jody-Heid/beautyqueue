@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Traits\ApiResponseHelpers;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
 
 class UserCreateRequest extends FormRequest
@@ -18,7 +19,7 @@ class UserCreateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->admin()->exists();
+        return $this->user()->can('create_user');
     }
 
     /**
@@ -29,19 +30,12 @@ class UserCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string',
+            'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email',
-            'cellphone_number' => ['required', 'string', 'unique:users,cellphone_number', 'regex:/^27[0-9]{9}$/'],
-            'password' => 'required',
-        ];
-    }
-
-    public function messages()
-    {
-        return [
-            'cellphone_number.required' => 'The cellphone number is required.',
-            'cellphone_number.regex' => 'The cellphone number must start with 27 and be followed by 9 digits.',
-            // 'role_id.regex' => 'The roles field must be a comma-separated list of integers.',
+            'password' => ['required', 'string', 'confirmed', Password::defaults()],
+            'role' => 'required|string|exists:roles,name',
+            'permissions' => 'nullable|array',
+            'permissions.*' => 'string|exists:permissions,name',
         ];
     }
 

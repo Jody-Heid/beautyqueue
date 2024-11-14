@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\UserRoles;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 
@@ -13,16 +14,9 @@ class RoleSeeder extends Seeder
     public function run(): void
     {
 
-        $roles = collect([
-            'admin',
-            'hairstylist',
-            'customer',
-
-        ]);
-
-        foreach ($roles as $role) {
+        foreach (UserRoles::all() as $role) {
             if (! Role::where('name', $role)->exists()) {
-                Role::create(['name' => $role]);
+                Role::create(['name' => $role, 'guard_name' => 'api']);
             }
         }
     }

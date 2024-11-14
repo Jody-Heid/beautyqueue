@@ -18,7 +18,7 @@ class HairstylistCreateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->admin()->exists();
+        return $this->user()->can('create_hairstylist');
     }
 
     /**
@@ -33,6 +33,8 @@ class HairstylistCreateRequest extends FormRequest
             'email' => 'required|email|max:255|unique:users,email',
             'cellphone_number' => ['required', 'string', 'unique:users,cellphone_number', 'regex:/^27[0-9]{9}$/'],
             'password' => 'required',
+            'permissions' => 'nullable|array',
+            'permissions.*' => 'string|exists:permissions,name',
         ];
     }
 
@@ -41,7 +43,6 @@ class HairstylistCreateRequest extends FormRequest
         return [
             'cellphone_number.required' => 'The cellphone number is required.',
             'cellphone_number.regex' => 'The cellphone number must start with 27 and be followed by 9 digits.',
-            // 'role_id.regex' => 'The roles field must be a comma-separated list of integers.',
         ];
     }
 
