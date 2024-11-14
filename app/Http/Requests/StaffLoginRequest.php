@@ -7,16 +7,18 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\ValidationException;
 
-class UserUpdateRequest extends FormRequest
+class StaffLoginRequest extends FormRequest
 {
     use ApiResponseHelpers;
+
+    protected $stopOnFirstFailure = true;
 
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return $this->user()->can('update_user') || $this->user()->can('update_any_user');
+        return auth()->guest();
     }
 
     /**
@@ -27,17 +29,32 @@ class UserUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string',
-            'email' => 'required|email|max:255|unique:users,email,'.$this->hairstylist->id,
-            'role' => 'required|string|exists:roles,name',
-            'permissions' => 'nullable|array',
-            'permissions.*' => 'string|exists:permissions,name',
+            'email' => 'required|email|exists:staff,email',
+            'password' => 'required',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'email.required' => 'Email is required',
+            'email.email' => 'Email format is incorrect',
+            'email.exists' => 'Email does not exist',
+            'password.required' => 'Password is required',
 
         ];
     }
 
+    /**
+     * Handle a failed validation attempt.
+     *
+     * @return void
+     *
+     * @throws \Illuminate\Validation\ValidationException
+     */
     protected function failedValidation(Validator $validator)
     {
+
         if ($this->wantsJson()) {
             $response = $this->respondFailedValidation($validator->errors()->first());
         }

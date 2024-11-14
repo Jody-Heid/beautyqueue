@@ -2,10 +2,10 @@
 
 namespace App\Transformers;
 
-use App\Models\Customer;
+use App\Models\Tenant;
 use Flugg\Responder\Transformers\Transformer;
 
-class CustomerTransformer extends Transformer
+class TenantTransformer extends Transformer
 {
     /**
      * List of available relations.
@@ -24,12 +24,13 @@ class CustomerTransformer extends Transformer
     /**
      * Transform the model.
      */
-    public function transform(Customer $customer): array
+    public function transform(Tenant $tenant): array
     {
         return [
-            'name' => $customer->name,
-            'email' => $customer->email,
-            'cellphone_number' => $customer->cellphone_number,
+            'name' => $tenant->name,
+            'email' => $tenant->email,
+            'address' => $tenant->address,
+            'phone_number' => $tenant->phone_number,
         ];
     }
 }

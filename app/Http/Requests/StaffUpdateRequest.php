@@ -7,16 +7,18 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\ValidationException;
 
-class UserUpdateRequest extends FormRequest
+class StaffUpdateRequest extends FormRequest
 {
     use ApiResponseHelpers;
+
+    protected $stopOnFirstFailure = true;
 
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return $this->user()->can('update_user') || $this->user()->can('update_any_user');
+        return $this->user()->can('update_staff') || $this->user()->can('update_any_staff');
     }
 
     /**
@@ -27,12 +29,11 @@ class UserUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string',
-            'email' => 'required|email|max:255|unique:users,email,'.$this->hairstylist->id,
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:staff,email,'.$this->staff->id,
             'role' => 'required|string|exists:roles,name',
             'permissions' => 'nullable|array',
             'permissions.*' => 'string|exists:permissions,name',
-
         ];
     }
 

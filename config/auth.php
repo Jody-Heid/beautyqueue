@@ -40,6 +40,10 @@ return [
             'driver' => 'sanctum',
             'provider' => 'users',
         ],
+        'staff_api' => [
+            'driver' => 'sanctum',
+            'provider' => 'staff',
+        ],
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
@@ -68,11 +72,10 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'staff' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Staff::class,
+        ],
     ],
 
     /*
@@ -96,6 +99,12 @@ return [
 
     'passwords' => [
         'users' => [
+            'provider' => 'users',
+            'table' => 'password_reset_tokens',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'staff' => [
             'provider' => 'users',
             'table' => 'password_reset_tokens',
             'expire' => 60,

@@ -25,16 +25,6 @@ class Appointment extends Model
         'status' => AppointmentStatus::class,
     ];
 
-    public function customer(): BelongsTo
-    {
-        return $this->belongsTo(Customer::class, 'customer_id');
-    }
-
-    public function hairstylist(): BelongsTo
-    {
-        return $this->belongsTo(Hairstylist::class, 'staff_id');
-    }
-
     public function service(): BelongsTo
     {
         return $this->belongsTo(OfferedService::class, 'offered_service_id');

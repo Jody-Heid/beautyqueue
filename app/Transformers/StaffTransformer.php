@@ -2,10 +2,10 @@
 
 namespace App\Transformers;
 
-use App\Models\Admin;
+use App\Models\Staff;
 use Flugg\Responder\Transformers\Transformer;
 
-class AdminTransformer extends Transformer
+class StaffTransformer extends Transformer
 {
     /**
      * List of available relations.
@@ -24,12 +24,13 @@ class AdminTransformer extends Transformer
     /**
      * Transform the model.
      */
-    public function transform(Admin $admin): array
+    public function transform(Staff $staff): array
     {
         return [
-            'name' => $admin->name,
-            'email' => $admin->email,
-            'cellphone_number' => $admin->cellphone_number,
+            'name' => $staff->name,
+            'email' => $staff->email,
+            'role' => $staff->getRoleNames(),
+            'permissions' => $staff->getPermissionNames(),
         ];
     }
 }

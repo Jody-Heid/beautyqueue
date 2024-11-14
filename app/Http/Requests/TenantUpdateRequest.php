@@ -7,16 +7,18 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\ValidationException;
 
-class UserUpdateRequest extends FormRequest
+class TenantUpdateRequest extends FormRequest
 {
     use ApiResponseHelpers;
+
+    protected $stopOnFirstFailure = true;
 
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return $this->user()->can('update_user') || $this->user()->can('update_any_user');
+        return $this->user()->can('update_tenant') || $this->user()->can('update_any_tenant');
     }
 
     /**
@@ -27,17 +29,16 @@ class UserUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string',
-            'email' => 'required|email|max:255|unique:users,email,'.$this->hairstylist->id,
-            'role' => 'required|string|exists:roles,name',
-            'permissions' => 'nullable|array',
-            'permissions.*' => 'string|exists:permissions,name',
-
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:tenants,email,'.$this->tenant->id,
+            'address' => 'required|string|max:255',
+            'phone_number' => 'required|digits:11|starts_with:27',
         ];
     }
 
     protected function failedValidation(Validator $validator)
     {
+
         if ($this->wantsJson()) {
             $response = $this->respondFailedValidation($validator->errors()->first());
         }

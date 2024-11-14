@@ -3,30 +3,30 @@
 namespace App\Http\Controllers\API\V1\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\LoginRequest;
-use App\Repositories\UserRepository;
+use App\Http\Requests\StaffLoginRequest;
+use App\Repositories\StaffRepository;
 use Flugg\Responder\Contracts\Responder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 
-class LoginController extends Controller
+class StaffLoginController extends Controller
 {
     public function __construct(
-        private readonly UserRepository $userRepository,
+        private readonly StaffRepository $staffRepository,
         private readonly Responder $responder
     ) {
     }
 
-    public function authentication(LoginRequest $request): JsonResponse
+    public function login(StaffLoginRequest $request): JsonResponse
     {
-        $user = $this->userRepository->getUserByEmail($request->validated('email'));
+        $staff = $this->staffRepository->getStaffByEmail($request->validated('email'));
 
-        if (Hash::check($request->validated('password'), $userPassword = $user->password)) {
-            $user->tokens()->delete();
+        if (Hash::check($request->validated('password'), $staffPassword = $staff->password)) {
+            $staff->tokens()->delete();
 
             return $this->responder
                 ->success([
-                    'token' => $user->createToken($userPassword)->plainTextToken,
+                    'token' => $staff->createToken($staffPassword)->plainTextToken,
                     'type' => 'bearer',
                 ])
                 ->respond();
