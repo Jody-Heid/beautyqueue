@@ -12,7 +12,7 @@ class Tenant extends Model
     use HasFactory , SoftDeletes;
 
     protected $fillable = [
-        'name', 'email', 'phone', 'address',
+        'name', 'email', 'phone_number', 'address',
     ];
 
     public function users(): HasMany

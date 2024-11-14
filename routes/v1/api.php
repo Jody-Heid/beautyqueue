@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\V1\Auth\StaffLoginController;
 use App\Http\Controllers\API\V1\Auth\UserLoginController;
+use App\Http\Controllers\API\V1\TenantController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,7 +25,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('staff')->group(function () {
         Route::prefix('admin')->group(function () {
-            //TODO: add admin routes
+            Route::apiResource('tenant', TenantController::class);
         });
     });
 });
