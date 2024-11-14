@@ -29,7 +29,6 @@ class OfferedServiceTransformer extends Transformer
     public function transform(OfferedService $offeredService)
     {
         return [
-            'id' => (int) $offeredService->id,
             'name' => $offeredService->name,
             'description' => $offeredService->description,
             'price' => "R {$offeredService->price}",

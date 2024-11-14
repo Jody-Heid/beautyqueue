@@ -34,7 +34,6 @@ class AppointmentTransformer extends Transformer
     public function transform(Appointment $appointment)
     {
         return [
-            'id' => (int) $appointment->id,
             'appointment_date' => $appointment->appointment_date,
             'appointment_time' => Carbon::createFromFormat('H:i:s', $appointment->appointment_time)->format('H:i A'),
             'status' => $appointment->status,

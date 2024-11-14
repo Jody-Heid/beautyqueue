@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasTenant;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -12,7 +13,9 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, HasRoles, Notifiable, SoftDeletes;
+    use HasApiTokens, HasFactory, HasRoles, HasTenant, Notifiable , SoftDeletes;
+
+    protected $guard_name = 'api';
 
     /**
      * The attributes that are mass assignable.
@@ -22,8 +25,8 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $fillable = [
         'name',
         'email',
-        'cellphone_number',
         'password',
+        'tenant_id',
     ];
 
     /**
@@ -45,19 +48,4 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
-
-    public function admin()
-    {
-        return $this->hasOne(Admin::class, 'id');
-    }
-
-    public function customer()
-    {
-        return $this->hasOne(Customer::class, 'id');
-    }
-
-    public function hairstylist()
-    {
-        return $this->hasOne(Hairstylist::class, 'id');
-    }
 }

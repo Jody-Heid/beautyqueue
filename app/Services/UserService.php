@@ -32,7 +32,6 @@ class UserService
     public function createUser(array $userData): User
     {
         $user = $this->userRepository->createUser($userData);
-        $user->syncRoles($this->convertToIntegerArray($userData['role_id']));
 
         return $user;
     }
@@ -51,7 +50,6 @@ class UserService
     public function updateUser(array $userData, User $user): User
     {
         $this->userRepository->updateUser($userData, $user);
-        $user->syncRoles($this->convertToIntegerArray($userData['role_id']));
 
         return $user;
     }

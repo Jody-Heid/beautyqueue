@@ -16,7 +16,7 @@ class CustomerUpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->customer()->exists();
+        return $this->user()->can('update_customer') || $this->user()->can('update_any_customer');
     }
 
     /**
@@ -30,6 +30,8 @@ class CustomerUpdateRequest extends FormRequest
             'name' => 'required|string',
             'email' => 'required|email|max:255|unique:users,email,'.$this->customer->id,
             'cellphone_number' => ['required', 'string', 'unique:users,cellphone_number,'.$this->customer->id, 'regex:/^27[0-9]{9}$/'],
+            'permissions' => 'nullable|array',
+            'permissions.*' => 'string|exists:permissions,name',
         ];
     }
 

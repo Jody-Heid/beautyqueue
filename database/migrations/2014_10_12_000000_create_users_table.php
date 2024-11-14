@@ -15,11 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('cellphone_number')->unique()->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->enum('status', ['active', 'disabled', 'pending'])->default('pending');
             $table->rememberToken();
+            $table->foreignId('tenant_id')->nullable()->constrained('tenants');
             $table->timestamps();
             $table->softDeletes();
         });
