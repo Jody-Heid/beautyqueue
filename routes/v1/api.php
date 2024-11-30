@@ -21,16 +21,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->group(function () {
     Route::post('staff/login', [StaffLoginController::class, 'login']);
-    Route::post('customer/login', [CustomerLoginController::class, 'login']);
-    Route::post('customer/register', [CustomerRegistrationController::class, 'register']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::prefix('staff')->group(function () {
         Route::prefix('admin')->group(function () {
-            Route::apiResource('tenant', TenantController::class);
             Route::apiResource('staff', StaffController::class);
-            Route::apiResource('user', UserController::class);
-        });
+            Route::apiResource('tenant', TenantController::class);
     });
 });
