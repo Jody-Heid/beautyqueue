@@ -19,7 +19,8 @@ class UserTransformer extends Transformer
      *
      * @var array
      */
-    protected $load = [];
+    protected $load = [
+    ];
 
     /**
      * Transform the model.
@@ -29,6 +30,7 @@ class UserTransformer extends Transformer
         return [
             'name' => $user->name,
             'email' => $user->email,
+            'tenant_name' => $user->tenant->name,
             'role' => $user->getRoleNames(),
             'permissions' => $user->getPermissionNames(),
         ];

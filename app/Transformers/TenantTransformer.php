@@ -31,6 +31,7 @@ class TenantTransformer extends Transformer
             'email' => $tenant->email,
             'address' => $tenant->address,
             'phone_number' => $tenant->phone_number,
+            'active_users' => $tenant->users()->count()
         ];
     }
 }

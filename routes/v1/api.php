@@ -1,12 +1,13 @@
 <?php
 
-use App\Http\Controllers\API\V1\Auth\CustomerLoginController;
-use App\Http\Controllers\API\V1\Auth\CustomerRegistrationController;
-use App\Http\Controllers\API\V1\Auth\StaffLoginController;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\V1\UserController;
 use App\Http\Controllers\API\V1\StaffController;
 use App\Http\Controllers\API\V1\TenantController;
-use App\Http\Controllers\API\V1\UserController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\V1\TenantUserController;
+use App\Http\Controllers\API\V1\Auth\StaffLoginController;
+use App\Http\Controllers\API\V1\Auth\CustomerLoginController;
+use App\Http\Controllers\API\V1\Auth\CustomerRegistrationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,5 +29,9 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::apiResource('staff', StaffController::class);
             Route::apiResource('tenant', TenantController::class);
             Route::apiResource('user', UserController::class);
+            Route::prefix('tenant/{tenant}')->group(function () {
+                Route::apiResource('users', TenantUserController::class);
+                Route::get('users/email/{email}', [TenantUserController::class, 'findByEmail']);
+            });
     });
 });
