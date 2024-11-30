@@ -27,5 +27,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::prefix('admin')->group(function () {
             Route::apiResource('staff', StaffController::class);
             Route::apiResource('tenant', TenantController::class);
+            Route::apiResource('user', UserController::class);
     });
 });
