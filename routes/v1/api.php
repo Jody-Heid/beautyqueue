@@ -29,9 +29,6 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::apiResource('staff', StaffController::class);
             Route::apiResource('tenant', TenantController::class);
             Route::apiResource('user', UserController::class);
-            Route::prefix('tenant/{tenant}')->group(function () {
-                Route::apiResource('users', TenantUserController::class);
-                Route::get('users/email/{email}', [TenantUserController::class, 'findByEmail']);
-            });
+            Route::apiResource('tenant.users', TenantUserController::class);
     });
 });
