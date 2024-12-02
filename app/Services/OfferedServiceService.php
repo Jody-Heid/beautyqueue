@@ -9,47 +9,92 @@ use Illuminate\Database\Eloquent\Collection;
 class OfferedServiceService
 {
     public function __construct(
-        protected OfferedServiceRepositoryInterface $offeredServiceRepository
+        private readonly OfferedServiceRepositoryInterface $offeredServiceRepository
     ) {
     }
 
     /**
-     * Get all offered services.
+     * List all services for a tenant.
      */
-    public function getAllOfferedServices(): Collection
+    public function listServices(int $tenantId): Collection
     {
-        return $this->offeredServiceRepository->getAllOfferedServices();
+        return $this->offeredServiceRepository->getAllServices($tenantId);
     }
 
     /**
-     * Create a new offered service.
+     * Create a new service.
      */
-    public function createOfferedService(array $data): OfferedService
+    public function createService(array $serviceData): OfferedService
     {
-        return $this->offeredServiceRepository->createOfferedService($data);
+        if (isset($serviceData['duration']) && !isset($serviceData['duration_minutes'])) {
+            $serviceData['duration_minutes'] = $this->convertToMinutes($serviceData['duration']);
+            unset($serviceData['duration']);
+        }
+
+        return $this->offeredServiceRepository->createService($serviceData);
     }
 
     /**
-     * Get an offered service by ID.
+     * Get a specific service by ID.
      */
-    public function getOfferedServiceById(int|string $id): OfferedService
+    public function getServiceById(string|int $id): OfferedService
     {
-        return $this->offeredServiceRepository->getOfferedServiceById($id);
+        return $this->offeredServiceRepository->getServiceById($id);
     }
 
     /**
-     * Update an existing offered service.
+     * Get services by category.
      */
-    public function updateOfferedService(array $data, OfferedService $service): OfferedService
+    public function getServicesByCategory(int $categoryId, int $tenantId): Collection
     {
-        return $this->offeredServiceRepository->updateOfferedService($data, $service);
+        return $this->offeredServiceRepository->getServicesByCategory($categoryId, $tenantId);
     }
 
     /**
-     * Delete an offered service.
+     * Update an existing service.
      */
-    public function deleteOfferedService(OfferedService $service): void
+    public function updateService(array $serviceData, OfferedService $service): OfferedService
     {
-        $this->offeredServiceRepository->deleteOfferedService($service);
+        // Handle duration conversion if provided
+        if (isset($serviceData['duration']) && !isset($serviceData['duration_minutes'])) {
+            $serviceData['duration_minutes'] = $this->convertToMinutes($serviceData['duration']);
+            unset($serviceData['duration']);
+        }
+
+        return $this->offeredServiceRepository->updateService($serviceData, $service);
+    }
+
+    /**
+     * Delete a specific service.
+     */
+    public function destroyService(OfferedService $service): void
+    {
+        $this->offeredServiceRepository->deleteService($service);
+    }
+
+    /**
+     * Get active services for a tenant.
+     */
+    public function getActiveServices(int $tenantId): Collection
+    {
+        return $this->offeredServiceRepository->getActiveServices($tenantId);
+    }
+
+    /**
+     * Convert duration string to minutes.
+     */
+    private function convertToMinutes(string $duration): int
+    {
+        if (preg_match('/^(\d+)h\s*(\d*)?m?$/', $duration, $matches)) {
+            $hours = (int) $matches[1];
+            $minutes = isset($matches[2]) ? (int) $matches[2] : 0;
+            return ($hours * 60) + $minutes;
+        }
+
+        if (preg_match('/^(\d+)m$/', $duration, $matches)) {
+            return (int) $matches[1];
+        }
+
+        return 0;
     }
 }

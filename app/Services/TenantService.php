@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Interface\RoleRepositoryInterface;
-use App\Interface\TenantUserRepositoryInterface;
+use App\Interface\TenantRepositoryInterface;
 use App\Models\Tenant;
 use App\Traits\ConvertsCommaSeparatedString;
 use Illuminate\Database\Eloquent\Collection;
@@ -13,7 +13,7 @@ class TenantService
     use ConvertsCommaSeparatedString;
 
     public function __construct(
-        private readonly TenantUserRepositoryInterface $tenantRepository,
+        private readonly TenantRepositoryInterface $tenantRepository,
         private readonly RoleRepositoryInterface $roleRepository,
     ) {
     }

@@ -32,7 +32,7 @@ class OfferedServiceTransformer extends Transformer
             'name' => $offeredService->name,
             'description' => $offeredService->description,
             'price' => "R {$offeredService->price}",
-            'estimated_time' => "{$offeredService->estimated_time} minutes",
+            'estimated_time' => "{$offeredService->duration_minutes} minutes",
         ];
     }
 }

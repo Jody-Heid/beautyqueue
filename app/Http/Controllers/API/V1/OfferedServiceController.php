@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ServiceStoreRequest;
 use App\Http\Requests\ServiceUpdateRequest;
 use App\Models\OfferedService;
+use App\Models\Service;
+use App\Models\Tenant;
 use App\Services\OfferedServiceService;
 use App\Transformers\OfferedServiceTransformer;
 use Flugg\Responder\Responder;
@@ -20,40 +22,57 @@ class OfferedServiceController extends Controller
         $this->authorizeResource(OfferedService::class, 'service');
     }
 
-    public function index(): JsonResponse
+    public function index(Tenant $tenant): JsonResponse
     {
-        $services = $this->offeredServiceService->getAllOfferedServices();
+        $services = $this->offeredServiceService->listServices($tenant->id);
 
         return $services->isEmpty()
             ? $this->responder->success()->meta(['message' => 'No Services Found'])->respond()
             : $this->responder->success($services, OfferedServiceTransformer::class)->respond();
     }
 
-    public function store(ServiceStoreRequest $request): JsonResponse
+    public function store(ServiceStoreRequest $request, Tenant $tenant): JsonResponse
     {
-        $service = $this->offeredServiceService->createOfferedService($request->validated());
+        $validatedData = $request->validated();
+        $validatedData['tenant_id'] = $tenant->id;
 
-        return $this->responder->success($service, OfferedServiceTransformer::class)->meta(['message' => 'Service Created'])
+        $service = $this->offeredServiceService->createService($validatedData);
+
+        return $this->responder->success($service, OfferedServiceTransformer::class)
+            ->meta(['message' => 'Service Created'])
             ->respond();
     }
 
-    public function show(OfferedService $service): JsonResponse
+    public function show(Tenant $tenant, OfferedService $service): JsonResponse
     {
         return $this->responder->success($service, OfferedServiceTransformer::class)->respond();
     }
 
-    public function update(ServiceUpdateRequest $request, OfferedService $service): JsonResponse
+    public function update(ServiceUpdateRequest $request, Tenant $tenant, OfferedService $service): JsonResponse
     {
-        $service = $this->offeredServiceService->updateOfferedService($request->validated(), $service);
+        $validatedData = $request->validated();
+        $service = $this->offeredServiceService->updateService($validatedData, $service);
 
-        return $this->responder->success($service, OfferedServiceTransformer::class)->meta(['message' => 'Service Updated'])
+        return $this->responder->success($service, OfferedServiceTransformer::class)
+            ->meta(['message' => 'Service Updated'])
             ->respond();
     }
 
-    public function destroy(OfferedService $service): JsonResponse
+    public function destroy(Tenant $tenant, OfferedService $service): JsonResponse
     {
-        $this->offeredServiceService->deleteOfferedService($service);
+        $this->offeredServiceService->destroyService($service);
 
-        return $this->responder->success()->meta(['message' => 'Service Deleted'])->respond();
+        return $this->responder->success()
+            ->meta(['message' => 'Service Deleted'])
+            ->respond();
+    }
+
+    public function byCategory(Tenant $tenant, int $categoryId): JsonResponse
+    {
+        $services = $this->offeredServiceService->getServicesByCategory($categoryId, $tenant->id);
+
+        return $services->isEmpty()
+            ? $this->responder->success()->meta(['message' => 'No Services Found in Category'])->respond()
+            : $this->responder->success($services, OfferedServiceTransformer::class)->respond();
     }
 }
