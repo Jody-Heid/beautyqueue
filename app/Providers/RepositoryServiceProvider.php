@@ -33,8 +33,8 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(AppointmentRepositoryInterface::class, AppointmentRepository::class);
         $this->app->bind(StaffRepositoryInterface::class, StaffRepository::class);
         $this->app->bind(TenantRepositoryInterface::class, TenantRepository::class);
-        $this->app->bind(TenantUserRepositoryInterface::class , TenantUserRepository::class);
-        $this->app->bind(CategoryRepositoryInterface::class , CategoryRepository::class);
+        $this->app->bind(TenantUserRepositoryInterface::class, TenantUserRepository::class);
+        $this->app->bind(CategoryRepositoryInterface::class, CategoryRepository::class);
     }
 
     /**

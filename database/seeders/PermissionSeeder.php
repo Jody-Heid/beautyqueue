@@ -67,7 +67,6 @@ class PermissionSeeder extends Seeder
             if (! Permission::where('name', $permission)->exists()) {
                 Permission::updateOrCreate(['name' => $permission]);
             }
-
         }
     }
 }

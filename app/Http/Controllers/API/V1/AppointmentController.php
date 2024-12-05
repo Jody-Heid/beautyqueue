@@ -10,8 +10,6 @@ use App\Services\AppointmentService;
 use App\Transformers\AppointmentTransformer;
 use Flugg\Responder\Responder;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Log;
-use Throwable;
 
 class AppointmentController extends Controller
 {
@@ -24,20 +22,11 @@ class AppointmentController extends Controller
 
     public function index(): JsonResponse
     {
-        try {
-            $user = request()->user();
+        $appointments = $this->appointmentService->getAppointments();
 
-            $appointments = $this->appointmentService->getAppointments($user);
-
-            return $appointments->isEmpty()
-                ? $this->responder->success()->meta(['message' => 'No Appointments Found'])->respond()
-                : $this->responder->success($appointments, AppointmentTransformer::class)->respond();
-
-        } catch (Throwable $e) {
-            Log::error('Something went wrong getting appointments: ', [$e]);
-
-            return $this->responder->error('Appointment Error', 'Something went wrong while getting the appointments. Please try again.')->respond(500);
-        }
+        return $appointments->isEmpty()
+            ? $this->responder->success()->meta(['message' => 'No Appointments Found'])->respond()
+            : $this->responder->success($appointments, AppointmentTransformer::class)->respond();
     }
 
     public function store(AppointmentStoreRequest $request): JsonResponse
@@ -55,7 +44,7 @@ class AppointmentController extends Controller
 
     public function update(AppointmentUpdateRequest $request, Appointment $appointment): JsonResponse
     {
-        $appointment = $this->appointmentService->updateAppointment($request->validated(), $appointment);
+        $appointment = $this->appointmentService->updateAppointment($appointment, $request->validated());
 
         return $this->responder->success($appointment, AppointmentTransformer::class)->meta(['message' => 'Appointment Updated'])
             ->respond();

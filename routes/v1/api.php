@@ -1,15 +1,14 @@
 <?php
 
+use App\Http\Controllers\API\V1\AppointmentController;
+use App\Http\Controllers\API\V1\Auth\StaffLoginController;
 use App\Http\Controllers\API\V1\CategoryController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\API\V1\UserController;
+use App\Http\Controllers\API\V1\OfferedServiceController;
 use App\Http\Controllers\API\V1\StaffController;
 use App\Http\Controllers\API\V1\TenantController;
 use App\Http\Controllers\API\V1\TenantUserController;
-use App\Http\Controllers\API\V1\OfferedServiceController;
-use App\Http\Controllers\API\V1\Auth\StaffLoginController;
-use App\Http\Controllers\API\V1\Auth\CustomerLoginController;
-use App\Http\Controllers\API\V1\Auth\CustomerRegistrationController;
+use App\Http\Controllers\API\V1\UserController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,12 +26,13 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
-        Route::prefix('admin')->group(function () {
-            Route::apiResource('staff', StaffController::class);
-            Route::apiResource('tenant', TenantController::class);
-            Route::apiResource('user', UserController::class);
-            Route::apiResource('tenant.users', TenantUserController::class);
-            Route::apiResource('tenant.categories', CategoryController::class);
-            Route::apiResource('tenant.services', OfferedServiceController::class);
+    Route::prefix('admin')->group(function () {
+        Route::apiResource('staff', StaffController::class);
+        Route::apiResource('user', UserController::class);
+        Route::apiResource('tenant', TenantController::class);
+        Route::apiResource('tenant.users', TenantUserController::class);
+        Route::apiResource('tenant.categories', CategoryController::class);
+        Route::apiResource('tenant.services', OfferedServiceController::class);
+        Route::apiResource('appointments', AppointmentController::class);
     });
 });

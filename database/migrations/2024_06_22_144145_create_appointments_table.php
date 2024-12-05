@@ -14,12 +14,16 @@ return new class extends Migration
     {
         Schema::create('appointments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('customer_id')->constrained('users');
-            $table->foreignId('staff_id')->nullable()->constrained('users');
-            $table->foreignId('offered_service_id')->constrained('offered_services');
+            $table->foreignId('tenant_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('service_id')->constrained('offered_services')->onDelete('cascade');
             $table->date('appointment_date');
             $table->time('appointment_time');
-            $table->enum('status', array_column(AppointmentStatus::cases(), 'value'))->default(AppointmentStatus::SCHEDULED->value);
+            $table->string('status')->default(AppointmentStatus::PENDING);
+            $table->decimal('total_price', 10, 2)->nullable();
+            $table->integer('duration_minutes')->nullable();
+            $table->text('notes')->nullable();
+            $table->integer('rating')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

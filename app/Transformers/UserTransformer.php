@@ -30,7 +30,6 @@ class UserTransformer extends Transformer
         return [
             'name' => $user->name,
             'email' => $user->email,
-            'tenant_name' => $user->tenant->name,
             'role' => $user->getRoleNames(),
             'permissions' => $user->getPermissionNames(),
         ];
