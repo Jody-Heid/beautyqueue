@@ -37,7 +37,7 @@ class AppointmentService
         return $this->appointmentRepository->createAppointment($data);
     }
 
-    public function updateAppointment(Appointment $appointment, array $data): bool
+    public function updateAppointment(Appointment $appointment, array $data): Appointment
     {
         return $this->appointmentRepository->updateAppointment($appointment, $data);
     }

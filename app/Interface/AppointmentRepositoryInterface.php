@@ -17,7 +17,7 @@ interface AppointmentRepositoryInterface
 
     public function createAppointment(array $data): Appointment;
 
-    public function updateAppointment(Appointment $appointment, array $data): bool;
+    public function updateAppointment(Appointment $appointment, array $data): Appointment;
 
     public function deleteAppointment(Appointment $appointment): bool;
 }

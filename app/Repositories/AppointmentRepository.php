@@ -33,9 +33,12 @@ class AppointmentRepository implements AppointmentRepositoryInterface
         return Appointment::create($data);
     }
 
-    public function updateAppointment(Appointment $appointment, array $data): bool
+    public function updateAppointment(Appointment $appointment, array $data): Appointment
     {
-        return $appointment->update($data);
+        $appointment->update($data);
+        $appointment->refresh();
+
+        return $appointment;
     }
 
     public function deleteAppointment(Appointment $appointment): bool

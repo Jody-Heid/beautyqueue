@@ -30,7 +30,7 @@ class AppointmentUpdateRequest extends FormRequest
         return [
             'tenant_id' => 'sometimes|integer|exists:tenants,id',
             'user_id' => 'sometimes|integer|exists:users,id',
-            'service_id' => 'sometimes|integer|exists:services,id',
+            'service_id' => 'sometimes|integer|exists:offered_services,id',
             'appointment_date' => 'sometimes|date|after_or_equal:today',
             'appointment_time' => 'sometimes|date_format:H:i',
             'notes' => 'nullable|string',

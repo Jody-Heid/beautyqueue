@@ -33,8 +33,7 @@ class AppointmentController extends Controller
     {
         $appointment = $this->appointmentService->createAppointment($request->validated());
 
-        return $this->responder->success($appointment, AppointmentTransformer::class)->meta(['message' => 'Appointment Created'])
-            ->respond();
+        return $this->responder->success($appointment, AppointmentTransformer::class)->meta(['message' => 'Appointment Created'])->respond();
     }
 
     public function show(Appointment $appointment): JsonResponse
@@ -46,8 +45,7 @@ class AppointmentController extends Controller
     {
         $appointment = $this->appointmentService->updateAppointment($appointment, $request->validated());
 
-        return $this->responder->success($appointment, AppointmentTransformer::class)->meta(['message' => 'Appointment Updated'])
-            ->respond();
+        return $this->responder->success($appointment, AppointmentTransformer::class)->meta(['message' => 'Appointment Updated'])->respond();
     }
 
     public function destroy(Appointment $appointment): JsonResponse
