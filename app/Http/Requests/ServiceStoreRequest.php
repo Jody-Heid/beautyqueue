@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use App\Traits\ApiResponseHelpers;
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Validation\ValidationException;
 
 class ServiceStoreRequest extends FormRequest
@@ -16,7 +17,7 @@ class ServiceStoreRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->admin()->exists();
+        return $this->user()->can('create_services');
     }
 
     /**
@@ -27,10 +28,34 @@ class ServiceStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255|unique:offered_services,name',
-            'description' => 'nullable|string',
-            'price' => 'required|numeric|min:0',
-            'estimated_time' => 'required|numeric',
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('offered_services', 'name')
+                    ->where('tenant_id', $this->route('tenant')->id)
+            ],
+            'category_id' => [
+                'required',
+                'integer',
+                Rule::exists('categories', 'id')
+                    ->where('tenant_id', $this->route('tenant')->id)
+            ],
+            'description' => ['nullable', 'string'],
+            'price' => ['required', 'numeric', 'min:0'],
+            'duration_minutes' => ['required', 'integer', 'min:1'],
+            'is_active' => ['boolean'],
+            'minimum_age' => ['nullable', 'integer', 'min:0'],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'name.unique' => 'A service with this name already exists in your salon.',
+            'category_id.exists' => 'The selected category does not exist in your salon.',
+            'duration_minutes.min' => 'Service duration must be at least 1 minute.',
+            'price.min' => 'Service price cannot be negative.'
         ];
     }
 

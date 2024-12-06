@@ -13,12 +13,18 @@ return new class extends Migration
     {
         Schema::create('offered_services', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('tenant_id')->constrained()->onDelete('cascade');
+            $table->foreignId('category_id')->constrained('categories')->onDelete('restrict');
             $table->string('name');
             $table->text('description')->nullable();
-            $table->decimal('price', 8, 2);
-            $table->integer('estimated_time')->unsigned();
+            $table->decimal('price', 10, 2);
+            $table->integer('duration_minutes');
+            $table->boolean('is_active')->default(true);
+            $table->integer('minimum_age')->nullable();
             $table->timestamps();
             $table->softDeletes();
+
+            $table->unique(['tenant_id', 'name']);
         });
     }
 

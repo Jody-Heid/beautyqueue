@@ -2,91 +2,47 @@
 
 namespace App\Repositories;
 
-use App\Enums\AppointmentStatus;
 use App\Interface\AppointmentRepositoryInterface;
 use App\Models\Appointment;
-use App\Models\Customer;
-use App\Models\Hairstylist;
 use Illuminate\Support\Collection;
 
 class AppointmentRepository implements AppointmentRepositoryInterface
 {
-    /**
-     * Gets all Appointments
-     */
-    public function getAllAppointments(): Collection
+    public function getAllAppointments(): ?Collection
     {
         return Appointment::all();
     }
 
-    /**
-     * Retrieve an Appointment model instance by id
-     */
-    public function getAppointmentById(int|string $id): Appointment
+    public function findByAppointmentId(int $id): ?Appointment
     {
-        return Appointment::findOrFail($id);
+        return Appointment::find($id);
     }
 
-    /**
-     * Retrieve an Appointment model instance by Custome
-     */
-    public function getCustomerAppointments(Customer $customer): ?Collection
+    public function findByAppointmentTenantId(int $tenantId): Collection
     {
-        return $customer->customerAppointments;
+        return Appointment::where('tenant_id', $tenantId)->get();
     }
 
-    /**
-     * Retrieve an Appointment model instance by Hairstylist
-     */
-    public function getStaffAppointments(Hairstylist $hairstylist): ?Collection
+    public function findByAppointmentUserId(int $userId): Collection
     {
-        return $hairstylist->staffAppointments;
+        return Appointment::where('user_id', $userId)->get();
     }
 
-    /**
-     * Create a new Appointment
-     */
-    public function createAppointment(array $appointmentDetails, ?Customer $customer = null, ?Hairstylist $hairstylist = null): Appointment
+    public function createAppointment(array $data): Appointment
     {
-        $appointment = Appointment::create([
-            'customer_id' => $customer->id ?? $appointmentDetails['customer_id'],
-            'staff_id' => $hairstylist->id ?? $appointmentDetails['staff_id'] ?? null,
-            'offered_service_id' => $appointmentDetails['offered_service_id'],
-            'appointment_date' => $appointmentDetails['appointment_date'],
-            'appointment_time' => $appointmentDetails['appointment_time'],
-        ]);
+        return Appointment::create($data);
+    }
 
+    public function updateAppointment(Appointment $appointment, array $data): Appointment
+    {
+        $appointment->update($data);
         $appointment->refresh();
 
         return $appointment;
     }
 
-    /**
-     * Update an existing Appointment
-     */
-    public function updateAppointment(array $newDetails, Appointment $appointment): Appointment
+    public function deleteAppointment(Appointment $appointment): bool
     {
-        $appointment->update($newDetails);
-        $appointment->refresh();
-
-        return $appointment;
-    }
-
-    /**
-     * Update an existing Appointment status
-     */
-    public function updateAppointmentStatus(AppointmentStatus $status, Appointment $appointment): Appointment
-    {
-        $appointment->update(['status' => $status->value]);
-
-        return $appointment;
-    }
-
-    /**
-     * Remove an existing Appointment
-     */
-    public function deleteAppointment(Appointment $appointment): void
-    {
-        $appointment->delete();
+        return $appointment->delete();
     }
 }
