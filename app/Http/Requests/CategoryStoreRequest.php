@@ -2,22 +2,37 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use App\Traits\ApiResponseHelpers;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Validation\ValidationException;
 
-class ServiceUpdateRequest extends FormRequest
+class CategoryStoreRequest extends FormRequest
 {
     use ApiResponseHelpers;
+
+    protected $stopOnFirstFailure = true;
 
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return $this->user()->can('update_services');
+        return $this->user()->can('create_categories');
+    }
+
+    /**
+     * Prepare the data for validation.
+     */
+    protected function prepareForValidation(): void
+    {
+        if ($this->has('name') && !$this->has('slug')) {
+            $this->merge([
+                'slug' => Str::slug($this->name)
+            ]);
+        }
     }
 
     /**
@@ -29,36 +44,22 @@ class ServiceUpdateRequest extends FormRequest
     {
         return [
             'name' => [
-                'sometimes',
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('offered_services', 'name')
+                Rule::unique('categories', 'name')
                     ->where('tenant_id', $this->route('tenant')->id)
-                    ->ignore($this->route('service')->id)
             ],
-            'category_id' => [
-                'sometimes',
+            'slug' => [
                 'required',
-                'integer',
-                Rule::exists('categories', 'id')
+                'string',
+                'max:255',
+                Rule::unique('categories', 'slug')
                     ->where('tenant_id', $this->route('tenant')->id)
             ],
             'description' => ['nullable', 'string'],
-            'price' => ['sometimes', 'required', 'numeric', 'min:0'],
-            'duration_minutes' => ['sometimes', 'required', 'integer', 'min:1'],
             'is_active' => ['boolean'],
-            'minimum_age' => ['nullable', 'integer', 'min:0'],
-        ];
-    }
-
-    public function messages(): array
-    {
-        return [
-            'name.unique' => 'A service with this name already exists in your salon.',
-            'category_id.exists' => 'The selected category does not exist in your salon.',
-            'duration_minutes.min' => 'Service duration must be at least 1 minute.',
-            'price.min' => 'Service price cannot be negative.'
+            'display_order' => ['integer', 'min:0']
         ];
     }
 

@@ -2,12 +2,10 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\CustomerRole;
-use App\Rules\StaffRole;
+use App\Enums\AppointmentStatus;
 use App\Traits\ApiResponseHelpers;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
 class AppointmentUpdateRequest extends FormRequest
@@ -19,7 +17,7 @@ class AppointmentUpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->admin()->exists();
+        return $this->user()->can('update_appointments', 'update_any_appointments');
     }
 
     /**
@@ -30,24 +28,14 @@ class AppointmentUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'customer_id' => ['required', 'numeric', Rule::exists('users', 'id')->withoutTrashed(), new CustomerRole],
-            'staff_id' => ['required', 'numeric', Rule::exists('users', 'id')->withoutTrashed(), new StaffRole],
-            'offered_service_id' => ['required', 'numeric', Rule::exists('offered_services', 'id')->withoutTrashed()],
-            'appointment_date' => ['required', 'date_format:Y-m-d H:i:s'],
-        ];
-    }
-
-    public function messages()
-    {
-        return [
-            'customer_id.required' => 'A customer is required.',
-            'customer_id.exists' => 'The selected customer does not exist.',
-            'staff_id.required' => 'A staff member is required.',
-            'staff_id.exists' => 'The selected staff member does not exist.',
-            'appointment_date.required' => 'The appointment date is required.',
-            'appointment_date.date_format' => 'The appointment date must be in the format Y-m-d H:i:s.',
-            'offered_service_id.required' => 'A service is required.',
-            'offered_service_id.exists' => 'The selected offered service does not exist.',
+            'tenant_id' => 'sometimes|integer|exists:tenants,id',
+            'user_id' => 'sometimes|integer|exists:users,id',
+            'service_id' => 'sometimes|integer|exists:offered_services,id',
+            'appointment_date' => 'sometimes|date|after_or_equal:today',
+            'appointment_time' => 'sometimes|date_format:H:i',
+            'notes' => 'nullable|string',
+            'rating' => 'nullable|integer|min:1|max:5',
+            'status' => 'sometimes|string|in:'.implode(',', AppointmentStatus::values()),
         ];
     }
 

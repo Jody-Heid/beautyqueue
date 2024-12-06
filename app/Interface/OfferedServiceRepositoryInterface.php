@@ -8,27 +8,37 @@ use Illuminate\Database\Eloquent\Collection;
 interface OfferedServiceRepositoryInterface
 {
     /**
-     * Gets all services
+     * Get all services for a tenant
      */
-    public function getAllOfferedServices(): Collection;
+    public function getAllServices(int $tenantId): Collection;
 
     /**
-     * Retrieve a OfferedService model instance by id
+     * Get a service by ID
      */
-    public function getOfferedServiceById(int|string $id): OfferedService;
+    public function getServiceById(int|string $id): OfferedService;
 
     /**
-     * Create a new OfferedService
+     * Get services by category
      */
-    public function createOfferedService(array $offeredServiceDetails): OfferedService;
+    public function getServicesByCategory(int $categoryId, int $tenantId): Collection;
 
     /**
-     * Update an existing OfferedService
+     * Create a new service
      */
-    public function updateOfferedService(array $newDetails, OfferedService $offeredService): OfferedService;
+    public function createService(array $serviceDetails): OfferedService;
 
     /**
-     * Remove an existing OfferedService
+     * Update an existing service
      */
-    public function deleteOfferedService(OfferedService $offeredService): void;
+    public function updateService(array $newDetails, OfferedService $service): OfferedService;
+
+    /**
+     * Delete a service
+     */
+    public function deleteService(OfferedService $service): void;
+
+    /**
+     * Get active services for a tenant
+     */
+    public function getActiveServices(int $tenantId): Collection;
 }

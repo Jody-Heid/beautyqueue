@@ -28,7 +28,7 @@ class UserUpdateRequest extends FormRequest
     {
         return [
             'name' => 'required|string',
-            'email' => 'required|email|max:255|unique:users,email,'.$this->hairstylist->id,
+            'email' => 'required|email|max:255|unique:users,email,'.$this->user->id,
             'role' => 'required|string|exists:roles,name',
             'permissions' => 'nullable|array',
             'permissions.*' => 'string|exists:permissions,name',

@@ -2,12 +2,9 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\CustomerRole;
-use App\Rules\StaffRole;
 use App\Traits\ApiResponseHelpers;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
 class AppointmentStoreRequest extends FormRequest
@@ -19,7 +16,7 @@ class AppointmentStoreRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->hairstylist()->exists() || $this->user()->customer()->exists();
+        return $this->user()->can('create_appointments');
     }
 
     /**
@@ -30,25 +27,13 @@ class AppointmentStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'customer_id' => ['required', 'numeric', Rule::exists('users', 'id')->withoutTrashed(), new CustomerRole],
-            'staff_id' => ['nullable', 'numeric', Rule::exists('users', 'id')->withoutTrashed(), new StaffRole],
-            'offered_service_id' => ['required', 'numeric', Rule::exists('offered_services', 'id')->withoutTrashed()],
-            'appointment_date' => ['required', 'date_format:Y-m-d'],
-            'appointment_time' => ['required', 'date_format:H:i:s'],
-        ];
-    }
-
-    public function messages()
-    {
-        return [
-            'customer_id.required' => 'A customer is required.',
-            'customer_id.exists' => 'The selected customer does not exist.',
-            'staff_id.required' => 'A staff member is required.',
-            'staff_id.exists' => 'The selected staff member does not exist.',
-            'appointment_date.required' => 'The appointment date is required.',
-            'appointment_date.date_format' => 'The appointment date must be in the format Y-m-d, eg 2000-03-15',
-            'offered_service_id.required' => 'A service is required.',
-            'offered_service_id.exists' => 'The selected offered service does not exist.',
+            'tenant_id' => 'required|integer|exists:tenants,id',
+            'user_id' => 'required|integer|exists:users,id',
+            'service_id' => 'required|integer|exists:offered_services,id',
+            'appointment_date' => 'required|date|after:today',
+            'appointment_time' => 'required|date_format:H:i',
+            'notes' => 'nullable|string',
+            'rating' => 'nullable|integer|min:1|max:5',
         ];
     }
 

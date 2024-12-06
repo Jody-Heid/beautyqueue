@@ -21,8 +21,8 @@ class AppointmentTransformer extends Transformer
      * @var array
      */
     protected $load = [
-        'customer' => CustomerTransformer::class,
-        'hairstylist' => HairstylistTransformer::class,
+        'user' => UserTransformer::class,
+        'tenant' => TenantTransformer::class,
         'service' => OfferedServiceTransformer::class,
     ];
 
@@ -33,10 +33,13 @@ class AppointmentTransformer extends Transformer
      */
     public function transform(Appointment $appointment)
     {
+        $appointment->refresh();
+
         return [
             'appointment_date' => $appointment->appointment_date,
             'appointment_time' => Carbon::createFromFormat('H:i:s', $appointment->appointment_time)->format('H:i A'),
             'status' => $appointment->status,
+            'notes' => $appointment->notes,
         ];
     }
 }

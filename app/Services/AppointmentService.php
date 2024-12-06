@@ -2,14 +2,8 @@
 
 namespace App\Services;
 
-use App\Enums\AppointmentStatus;
-use App\Exceptions\AppointmentStatusException;
 use App\Interface\AppointmentRepositoryInterface;
 use App\Models\Appointment;
-use App\Models\Customer;
-use App\Models\Hairstylist;
-use App\Models\User;
-use Exception;
 use Illuminate\Support\Collection;
 
 class AppointmentService
@@ -18,69 +12,38 @@ class AppointmentService
     {
     }
 
-    /**
-     * Gets all Appointments
-     */
-    public function getAppointments(User $user): ?Collection
+    public function getAppointments(): ?Collection
     {
-        if ($user->admin) {
-            return $this->appointmentRepository->getAllAppointments();
-        }
-        if ($user->hairstylist) {
-            return $this->appointmentRepository->getStaffAppointments($user->hairstylist);
-        }
-        if ($user->customer) {
-            return $this->appointmentRepository->getCustomerAppointments($user->customer);
-        }
-
-        throw new Exception('Error in getting appointments: ');
+        return $this->appointmentRepository->getAllAppointments();
     }
 
-    /**
-     * Retrieve an Appointment by id
-     */
-    public function getAppointmentById(int|string $id): Appointment
+    public function getAppointmentById(int $id): ?Appointment
     {
-        return $this->appointmentRepository->getAppointmentById($id);
+        return $this->appointmentRepository->findByAppointmentId($id);
     }
 
-    /**
-     * Create a new Appointment
-     */
-    public function createAppointment(array $appointmentDetails, ?Customer $customer = null, ?Hairstylist $hairstylist = null): Appointment
+    public function getAppointmentsByTenantId(int $tenantId): Collection
     {
-        return $this->appointmentRepository->createAppointment($appointmentDetails, $customer, $hairstylist);
+        return $this->appointmentRepository->findByAppointmentTenantId($tenantId);
     }
 
-    /**
-     * Update an existing Appointment
-     */
-    public function updateAppointment(array $newDetails, Appointment $appointment): Appointment
+    public function getAppointmentsByUserId(int $userId): Collection
     {
-        return $this->appointmentRepository->updateAppointment($newDetails, $appointment);
+        return $this->appointmentRepository->findByAppointmentUserId($userId);
     }
 
-    /**
-     * Update an existing Appointment status
-     *
-     * @throws Exception
-     */
-    public function updateAppointmentStatus(string $status, Appointment $appointment): Appointment
+    public function createAppointment(array $data): Appointment
     {
-        $status = AppointmentStatus::tryFrom($status);
-
-        if ($status == null) {
-            throw new AppointmentStatusException();
-        }
-
-        return $this->appointmentRepository->updateAppointmentStatus($status, $appointment);
+        return $this->appointmentRepository->createAppointment($data);
     }
 
-    /**
-     * Remove an existing Appointment
-     */
-    public function deleteAppointment(Appointment $appointment): void
+    public function updateAppointment(Appointment $appointment, array $data): Appointment
     {
-        $this->appointmentRepository->deleteAppointment($appointment);
+        return $this->appointmentRepository->updateAppointment($appointment, $data);
+    }
+
+    public function deleteAppointment(Appointment $appointment): bool
+    {
+        return $this->appointmentRepository->deleteAppointment($appointment);
     }
 }

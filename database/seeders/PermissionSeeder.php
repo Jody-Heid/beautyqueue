@@ -51,13 +51,22 @@ class PermissionSeeder extends Seeder
             'view_any_appointments',
             'update_any_appointments',
             'delete_any_appointments',
+
+            // Category permissions
+            'view_categories',
+            'create_categories',
+            'update_categories',
+            'delete_categories',
+            'view_any_categories',
+            'update_any_categories',
+            'delete_any_categories',
+
         ];
 
         foreach ($permissions as $permission) {
             if (! Permission::where('name', $permission)->exists()) {
                 Permission::updateOrCreate(['name' => $permission]);
             }
-
         }
     }
 }

@@ -8,46 +8,70 @@ use Illuminate\Database\Eloquent\Collection;
 
 class OfferedServiceRepository implements OfferedServiceRepositoryInterface
 {
-    /**
-     * Gets all services
-     */
-    public function getAllOfferedServices(): Collection
+    public function getAllServices(int $tenantId): Collection
     {
-        return OfferedService::all();
+        return OfferedService::where('tenant_id', $tenantId)
+            ->with('category')
+            ->orderBy('name')
+            ->get();
     }
 
-    /**
-     * Retrieve a OfferedService model instance by id
-     */
-    public function getOfferedServiceById(int|string $id): OfferedService
+    public function getServiceById(int|string $id): OfferedService
     {
-        return OfferedService::find($id);
+        return OfferedService::with('category')->findOrFail($id);
     }
 
-    /**
-     * Create a new OfferedService
-     */
-    public function createOfferedService(array $offeredServiceDetails): OfferedService
+    public function getServicesByCategory(int $categoryId, int $tenantId): Collection
     {
-        return OfferedService::create($offeredServiceDetails);
+        return OfferedService::where('tenant_id', $tenantId)
+            ->where('category_id', $categoryId)
+            ->where('is_active', true)
+            ->orderBy('name')
+            ->get();
     }
 
-    /**
-     * Update an existing OfferedService
-     */
-    public function updateOfferedService(array $newDetails, OfferedService $offeredService): OfferedService
+    public function createService(array $serviceDetails): OfferedService
     {
-        $offeredService->update($newDetails);
-        $offeredService->refresh();
-
-        return $offeredService;
+        return OfferedService::create($serviceDetails);
     }
 
-    /**
-     * Remove an existing OfferedService
-     */
-    public function deleteOfferedService(OfferedService $offeredService): void
+    public function updateService(array $newDetails, OfferedService $service): OfferedService
     {
-        $offeredService->delete();
+        $service->update($newDetails);
+        $service->refresh();
+
+        return $service;
+    }
+
+    public function deleteService(OfferedService $service): void
+    {
+        $service->delete();
+    }
+
+    public function getActiveServices(int $tenantId): Collection
+    {
+        return OfferedService::where('tenant_id', $tenantId)
+            ->where('is_active', true)
+            ->with('category')
+            ->orderBy('name')
+            ->get();
+    }
+
+    public function getServicesRequiringConsultation(int $tenantId): Collection
+    {
+        return OfferedService::where('tenant_id', $tenantId)
+            ->where('is_active', true)
+            ->where('requires_consultation', true)
+            ->with('category')
+            ->get();
+    }
+
+    public function getServicesRequiringPatchTest(int $tenantId): Collection
+    {
+        return OfferedService::where('tenant_id', $tenantId)
+            ->where('is_active', true)
+            ->where('requires_patch_test', true)
+            ->with('category')
+            ->get();
     }
 }
