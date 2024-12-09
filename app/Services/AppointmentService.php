@@ -2,9 +2,10 @@
 
 namespace App\Services;
 
-use App\Interface\AppointmentRepositoryInterface;
 use App\Models\Appointment;
+use App\Models\OfferedService;
 use Illuminate\Support\Collection;
+use App\Interface\AppointmentRepositoryInterface;
 
 class AppointmentService
 {
@@ -34,6 +35,9 @@ class AppointmentService
 
     public function createAppointment(array $data): Appointment
     {
+        $offeredService = OfferedService::find($data['service_id'])->first(['price' , 'duration_minutes']);
+        $data['total_price'] = $offeredService->duration_minutes;
+        $data['duration_minutes'] = $offeredService->price;
         return $this->appointmentRepository->createAppointment($data);
     }
 

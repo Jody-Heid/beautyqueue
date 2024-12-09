@@ -33,6 +33,7 @@ class AppointmentUpdateRequest extends FormRequest
             'service_id' => 'sometimes|integer|exists:offered_services,id',
             'appointment_date' => 'sometimes|date|after_or_equal:today',
             'appointment_time' => 'sometimes|date_format:H:i',
+            'total_price' => 'nullable|numeric',
             'notes' => 'nullable|string',
             'rating' => 'nullable|integer|min:1|max:5',
             'status' => 'sometimes|string|in:'.implode(',', AppointmentStatus::values()),
