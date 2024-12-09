@@ -26,7 +26,7 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::prefix('admin')->group(function () {
+    Route::middleware(['can:staff_route_access'])->prefix('admin')->group(function () {
         Route::apiResource('staff', StaffController::class);
         Route::apiResource('user', UserController::class);
         Route::apiResource('tenant', TenantController::class);
@@ -35,4 +35,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('tenant.services', OfferedServiceController::class);
         Route::apiResource('appointments', AppointmentController::class);
     });
+
+    Route::middleware(['can:tenant_route_access'])->prefix('tenant')->group(function () {
+        Route::apiResource('tenant.users', TenantUserController::class);
+        Route::apiResource('tenant.categories', CategoryController::class);
+        Route::apiResource('tenant.services', OfferedServiceController::class);
+    });
+
 });

@@ -61,6 +61,10 @@ class PermissionSeeder extends Seeder
             'update_any_categories',
             'delete_any_categories',
 
+            //Access to certain routes
+            'staff_route_access',
+            'tenant_route_access',
+            'customer_route_access',
         ];
 
         foreach ($permissions as $permission) {
